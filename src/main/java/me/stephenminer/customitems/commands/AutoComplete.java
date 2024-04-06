@@ -30,7 +30,7 @@ public class AutoComplete implements TabCompleter {
         if (!cmd.getName().equalsIgnoreCase("itembuilder"))
             return null;
         if (length == 1)
-            return baseCompleter();
+            return baseCompleter(args[0]);
         String args1 = args[0];
         if (args1.equalsIgnoreCase("give")) {
             if (length == 3)
@@ -93,7 +93,7 @@ public class AutoComplete implements TabCompleter {
         return null;
     }
 
-    private List<String> baseCompleter() {
+    private List<String> baseCompleter(String match) {
         List<String> completer = new ArrayList<>();
         completer.add("reloadconfig");
         completer.add("give");
@@ -110,7 +110,7 @@ public class AutoComplete implements TabCompleter {
         completer.add("removeLore");
         completer.add("createItem");
         completer.add("removeDisplayname");
-        return completer;
+        return plugin.filter(completer, match);
     }
 
     private List<String> itemCompleter(String match) {
