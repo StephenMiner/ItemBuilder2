@@ -34,15 +34,15 @@ public class AutoComplete implements TabCompleter {
         String args1 = args[0];
         if (args1.equalsIgnoreCase("give")) {
             if (length == 3)
-                return itemCompleter();
-            return playerItemCompleter();
+                return itemCompleter(args[1]);
+            return playerItemCompleter(args[1]);
         }
         if (args1.equalsIgnoreCase("recipe"))
-            return itemCompleter();
+            return itemCompleter(args[1]);
         if (args1.equalsIgnoreCase("addEnchantment")) {
             if (length == 3)
-                return addEnchantment();
-            return itemCompleter();
+                return addEnchantment(args[1]);
+            return itemCompleter(args[1]);
         }
         if (args1.equalsIgnoreCase("addAttribute")) {
             if (length == 3)
@@ -52,42 +52,42 @@ public class AutoComplete implements TabCompleter {
             if (length == 5)
                 return slotList();
 
-            return itemCompleter();
+            return itemCompleter(args[1]);
         }
         if (args1.equalsIgnoreCase("removeEnchantment")) {
             if (length == 3)
-                return removeEnchant(args[1]);
-            return itemCompleter();
+                return removeEnchant(args[1], args[2]);
+            return itemCompleter(args[1]);
         }
         if (args1.equalsIgnoreCase("removeAttribute")) {
             if (length == 3)
-                return removeAttribute(args[1]);
-            return itemCompleter();
+                return removeAttribute(args[1], args[2]);
+            return itemCompleter(args[1]);
         }
         if (args1.equalsIgnoreCase("setUnbreakable")) {
             if (length == 3)
                 return unbreakable();
-            return itemCompleter();
+            return itemCompleter(args[1]);
         }
         if (args1.equalsIgnoreCase("addItemFlag")) {
             if (length == 3)
-                return itemFlags();
-            return itemCompleter();
+                return itemFlags(args[2]);
+            return itemCompleter(args[1]);
         }
         if (args1.equalsIgnoreCase("removeItemFlag")) {
             if (length == 3)
-                return removeItemFlags(args[1]);
-            return itemCompleter();
+                return removeItemFlags(args[1], args[2]);
+            return itemCompleter(args[1]);
         }
         if (args1.equalsIgnoreCase("setLore")) {
             if (length == 3)
                 return setLore();
-            return itemCompleter();
+            return itemCompleter(args[1]);
         }
         if (args1.equalsIgnoreCase("setDisplayname"))
-            return itemCompleter();
+            return itemCompleter(args[1]);
         if (args1.equalsIgnoreCase("removeDisplayname"))
-            return itemCompleter();
+            return itemCompleter(args[1]);
 
 
         return null;
@@ -113,7 +113,7 @@ public class AutoComplete implements TabCompleter {
         return completer;
     }
 
-    private List<String> itemCompleter() {
+    private List<String> itemCompleter(String match) {
         File parent = new File(plugin.getDataFolder().getPath(), "items");
         if (!parent.exists()) parent.mkdir();
         List<String> items = new ArrayList<>();
@@ -121,16 +121,16 @@ public class AutoComplete implements TabCompleter {
         for (String name : fileNames){
             items.add(name.replace(".yml",""));
         }
-        return items;
+        return plugin.filter(items, match);
     }
 
-    private List<String> playerItemCompleter() {
+    private List<String> playerItemCompleter(String match) {
         List<String> returnList = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
             returnList.add(player.getName());
         }
-        returnList.addAll(itemCompleter());
-        return returnList;
+        returnList.addAll(itemCompleter(match));
+        return plugin.filter(returnList, match);
     }
 
     private List<String> unbreakable() {
@@ -140,47 +140,9 @@ public class AutoComplete implements TabCompleter {
         return list;
     }
 
-    private List<String> addEnchantment() {
-        List<String> enchants = new ArrayList<>();
-        enchants.add(Enchantment.LURE.getKey().getKey());
-        enchants.add(Enchantment.RIPTIDE.getKey().getKey());
-        enchants.add(Enchantment.ARROW_FIRE.getKey().getKey());
-        enchants.add(Enchantment.ARROW_DAMAGE.getKey().getKey());
-        enchants.add(Enchantment.ARROW_INFINITE.getKey().getKey());
-        enchants.add(Enchantment.BINDING_CURSE.getKey().getKey());
-        enchants.add(Enchantment.PROTECTION_FIRE.getKey().getKey());
-        enchants.add(Enchantment.PROTECTION_PROJECTILE.getKey().getKey());
-        enchants.add(Enchantment.QUICK_CHARGE.getKey().getKey());
-        enchants.add(Enchantment.SWEEPING_EDGE.getKey().getKey());
-        enchants.add(Enchantment.VANISHING_CURSE.getKey().getKey());
-        enchants.add(Enchantment.ARROW_KNOCKBACK.getKey().getKey());
-        enchants.add(Enchantment.CHANNELING.getKey().getKey());
-        enchants.add(Enchantment.DAMAGE_ALL.getKey().getKey());
-        enchants.add(Enchantment.DAMAGE_ARTHROPODS.getKey().getKey());
-        enchants.add(Enchantment.DAMAGE_UNDEAD.getKey().getKey());
-        enchants.add(Enchantment.DEPTH_STRIDER.getKey().getKey());
-        enchants.add(Enchantment.DIG_SPEED.getKey().getKey());
-        enchants.add(Enchantment.DURABILITY.getKey().getKey());
-        enchants.add(Enchantment.FIRE_ASPECT.getKey().getKey());
-        enchants.add(Enchantment.FROST_WALKER.getKey().getKey());
-        enchants.add(Enchantment.IMPALING.getKey().getKey());
-        enchants.add(Enchantment.LOOT_BONUS_BLOCKS.getKey().getKey());
-        enchants.add(Enchantment.KNOCKBACK.getKey().getKey());
-        enchants.add(Enchantment.LOYALTY.getKey().getKey());
-        enchants.add(Enchantment.LOOT_BONUS_MOBS.getKey().getKey());
-        enchants.add(Enchantment.LUCK.getKey().getKey());
-        enchants.add(Enchantment.MENDING.getKey().getKey());
-        enchants.add(Enchantment.MULTISHOT.getKey().getKey());
-        enchants.add(Enchantment.OXYGEN.getKey().getKey());
-        enchants.add(Enchantment.PIERCING.getKey().getKey());
-        enchants.add(Enchantment.PROTECTION_ENVIRONMENTAL.getKey().getKey());
-        enchants.add(Enchantment.PROTECTION_EXPLOSIONS.getKey().getKey());
-        enchants.add(Enchantment.PROTECTION_FALL.getKey().getKey());
-        enchants.add(Enchantment.SILK_TOUCH.getKey().getKey());
-        enchants.add(Enchantment.SOUL_SPEED.getKey().getKey());
-        enchants.add(Enchantment.THORNS.getKey().getKey());
-        enchants.add(Enchantment.WATER_WORKER.getKey().getKey());
-        return enchants;
+    private List<String> addEnchantment(String match) {
+        List<String> enchants = Arrays.stream(Enchantment.values()).map(enchantment -> enchantment.getKey().getKey()).toList();
+        return plugin.filter(enchants, match);
     }
 
     private List<String> addAttribute() {
@@ -207,7 +169,7 @@ public class AutoComplete implements TabCompleter {
         return set;
     }
 
-    private List<String> removeEnchant(String id) {
+    private List<String> removeEnchant(String id, String match) {
         ItemBuilder itemBuilder = new ItemBuilder(plugin, id);
         Map<Enchantment, Integer> enchants = itemBuilder.getEnchantments();
         List<String> returnList = new ArrayList<>();
@@ -216,10 +178,10 @@ public class AutoComplete implements TabCompleter {
         for (Enchantment ench : enchants.keySet()) {
             returnList.add(ench.getKey().getKey());
         }
-        return returnList;
+        return plugin.filter(returnList, match);
     }
 
-    private List<String> removeAttribute(String id) {
+    private List<String> removeAttribute(String id, String match) {
         ItemConfig config = plugin.findConfig(id);
         if (config == null) return null;
         BuildAttribute buildAttribute = new BuildAttribute(plugin, config);
@@ -230,10 +192,10 @@ public class AutoComplete implements TabCompleter {
         for (Attribute attrib : attributes.keySet()) {
             returnList.add(attrib.name());
         }
-        return returnList;
+        return plugin.filter(returnList, match);
     }
 
-    private List<String> itemFlags() {
+    private List<String> itemFlags(String match) {
         List<String> flags = new ArrayList<>();
         flags.add(ItemFlag.HIDE_DYE.name());
         flags.add(ItemFlag.HIDE_ATTRIBUTES.name());
@@ -242,16 +204,16 @@ public class AutoComplete implements TabCompleter {
         flags.add(ItemFlag.HIDE_PLACED_ON.name());
         flags.add(ItemFlag.HIDE_POTION_EFFECTS.name());
         flags.add(ItemFlag.HIDE_UNBREAKABLE.name());
-        return flags;
+        return plugin.filter(flags, match);
     }
 
-    private List<String> removeItemFlags(String id) {
+    private List<String> removeItemFlags(String id, String match) {
         List<String> flags = new ArrayList<>();
         ItemBuilder builder = new ItemBuilder(plugin, id);
         for (ItemFlag itemFlag : builder.getFlags()) {
             flags.add(itemFlag.name());
         }
-        return flags;
+        return plugin.filter(flags, match);
     }
 
     private List<String> setLore() {

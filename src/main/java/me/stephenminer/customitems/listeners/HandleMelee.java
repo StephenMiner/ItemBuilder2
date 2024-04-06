@@ -35,12 +35,14 @@ public class HandleMelee implements Listener {
     public static NamespacedKey TWO_HANDED = new NamespacedKey(JavaPlugin.getPlugin(CustomItems.class),"twohanded");
     public static NamespacedKey MOUNTED = new NamespacedKey(JavaPlugin.getPlugin(CustomItems.class),"mounted");
     private final CustomItems plugin;
+    private int fatigue;
 
     private Set<UUID> fatigueSet;
 
     public HandleMelee(){
         this.plugin = JavaPlugin.getPlugin(CustomItems.class);
         fatigueSet = new HashSet<>();
+        fatigue = 1;
     }
 
     @EventHandler
@@ -65,7 +67,6 @@ public class HandleMelee implements Listener {
         if (event.getDamager() instanceof Player player && event.getEntity() instanceof LivingEntity living){
             ItemStack item = player.getInventory().getItemInMainHand();
             if (!hasReach(item)) return;
-            System.out.println(99);
             RayTrace trace = new RayTrace(player);
             RayTraceResult result = trace.rayTrace(2.5, 0.1);
             if (result != null){
@@ -76,12 +77,9 @@ public class HandleMelee implements Listener {
             if (living.hasMetadata(ReachAttackHandler.DATA_KEY(player.getUniqueId()))){
                 living.removeMetadata(ReachAttackHandler.DATA_KEY(player.getUniqueId()),plugin);
                 applyMultipliers(event,mountMultiplier(item));
-                System.out.println("Damage Allowed");
-                System.out.println(event.getDamage());
 
             }else {
                 event.setCancelled(true);
-                System.out.println("Damage Stopped");
             }
         }
     }
@@ -95,7 +93,7 @@ public class HandleMelee implements Listener {
         Entity vehicle = player.getVehicle();
         if (vehicle instanceof LivingEntity && vehicle instanceof Vehicle) {
             event.setDamage(event.getDamage() * multiplier);
-            System.out.println("Multiplier-Applied");
+
         }
 
     }
@@ -107,10 +105,10 @@ public class HandleMelee implements Listener {
         ItemStack main = event.getMainHandItem();
         ItemStack off = event.getOffHandItem();
         //Swapping two-handed item from offhand to main hand with an item already in main-hand
-        System.out.println(twoHanded(main));
+
         passiveTwoHandCheck(player);
         if (twoHanded(main) && (off != null && !off.getType().isAir())) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,9));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,fatigue));
             fatigueSet.add(player.getUniqueId());
             player.sendMessage(ChatColor.YELLOW + "You cannot properly wield this weapon with an item in your other hand...");
         }
@@ -123,7 +121,7 @@ public class HandleMelee implements Listener {
         ItemStack offhand = player.getInventory().getItemInOffHand();
         passiveTwoHandCheck(player);
         if (twoHanded(item) && !offhand.getType().isAir()){
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,9));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,fatigue));
             fatigueSet.add(player.getUniqueId());
             player.sendMessage(ChatColor.YELLOW + "You cannot properly wield this weapon with an item in your other hand...");
         }
@@ -131,15 +129,6 @@ public class HandleMelee implements Listener {
 
     @EventHandler
     public void clickHands(InventoryClickEvent event){
-        ItemStack item = event.getCurrentItem();
-        if (item != null && item.hasItemMeta()){
-            Collection<AttributeModifier> mods = item.getItemMeta().getAttributeModifiers(Attribute.GENERIC_ATTACK_SPEED);
-            if (mods != null) {
-                mods.forEach(mod -> {
-                    System.out.println(mod.getAmount());
-                });
-            }
-        }
         Player player = (Player) event.getWhoClicked();
        // ItemStack mainhand = player.getInventory().getItemInMainHand();
 
@@ -149,7 +138,7 @@ public class HandleMelee implements Listener {
         passiveTwoHandCheck(player);
         //Case where a twohanded weapon was just placed into the mainhand slot via mouseclick while an item is in the offhand
         if (twoHanded(cursor) && !offhand.getType().isAir() && event.getSlot() == player.getInventory().getHeldItemSlot()){
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,9));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,fatigue));
             fatigueSet.add(player.getUniqueId());
             player.sendMessage(ChatColor.YELLOW + "You cannot properly wield this weapon with an item in your other hand...");
             return;
@@ -158,7 +147,7 @@ public class HandleMelee implements Listener {
         //Case where offhand slot is clicked while a twohanded weapon is in the mainhand
         if (event.getSlotType() == InventoryType.SlotType.QUICKBAR && event.getSlot() == 40){
             if (twoHanded(mainhand)){
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,9));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,fatigue));
                 fatigueSet.add(player.getUniqueId());
                 player.sendMessage(ChatColor.YELLOW + "You cannot use your other hand while wielding this weapon...");
                 return;
@@ -170,14 +159,14 @@ public class HandleMelee implements Listener {
             if (!twoHanded(current)) return;
             if (event.getHotbarButton() == player.getInventory().getHeldItemSlot()){
                 if (!offhand.getType().isAir()){
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,9));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,fatigue));
                     fatigueSet.add(player.getUniqueId());
                     player.sendMessage(ChatColor.YELLOW + "You cannot use your other hand while wielding this weapon...");
                 }
             }
             if (event.getSlot() > 8 && player.getInventory().firstEmpty() == player.getInventory().getHeldItemSlot()){
                 if (!offhand.getType().isAir()){
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,9));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,fatigue));
                     fatigueSet.add(player.getUniqueId());
                     player.sendMessage(ChatColor.YELLOW + "You cannot use your other hand while wielding this weapon...");
                 }
@@ -195,7 +184,7 @@ public class HandleMelee implements Listener {
         if (twoHanded(hand)){
 
             if (event.getInventorySlots().contains(40)) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,9));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,fatigue));
                 fatigueSet.add(player.getUniqueId());
                 player.sendMessage(ChatColor.YELLOW + "You cannot use your other hand while wielding this weapon...");
                 return;
@@ -207,7 +196,7 @@ public class HandleMelee implements Listener {
         if (event.getInventorySlots().contains(player.getInventory().getHeldItemSlot())){
             ItemStack offhand = player.getInventory().getItemInOffHand();
             if (twoHanded(event.getOldCursor()) && !offhand.getType().isAir()){
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,9));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999, fatigue));
                 fatigueSet.add(player.getUniqueId());
                 player.sendMessage(ChatColor.YELLOW + "You cannot use your other hand while wielding this weapon...");
                 return;
@@ -221,7 +210,7 @@ public class HandleMelee implements Listener {
         ItemStack main = player.getInventory().getItemInMainHand();
         ItemStack off = player.getInventory().getItemInOffHand();
         if (twoHanded(main) && !off.getType().isAir()){
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,999999,9));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,999999,fatigue));
             fatigueSet.add(player.getUniqueId());
             player.sendMessage(ChatColor.YELLOW + "You cannot use your other hand while wielding this weapon...");
         }
@@ -257,7 +246,7 @@ public class HandleMelee implements Listener {
         ItemStack cursor = player.getItemOnCursor();
         ItemStack off = player.getInventory().getItemInOffHand();
         if (twoHanded(cursor) && !off.getType().isAir() && player.getInventory().firstEmpty() == player.getInventory().getHeldItemSlot()){
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,9));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,9999999,fatigue));
             fatigueSet.add(player.getUniqueId());
             player.sendMessage(ChatColor.YELLOW + "You cannot use your other hand while wielding this weapon...");
         }
