@@ -3,6 +3,8 @@ You can create items with the /createItem [id] [material] and then /itembuilder 
 
 Alternatively, you can create a new file in the items folder inside this plugins datafolder titled "[id].yml" 
 
+When editing attributes, it is important to note that you are always adding onto the players base attributes. For example to have a weapon have the same attack speed as a diamond axe, you need to have the generic attack speed value be set to -3 since the player has a base 4 attack speed. If you want no attack cooldown, set the value to like 16.
+
 Here is an examle of an item config file. Keep in mind that "reach", "mount-multiplier", "two-handed", and "custom-model-data" cannot be edited through commands right now so you got to do that here. Also if you dont want these things changed for your items, don't add them in!
 ```
 material: DIAMOND_SWORD
