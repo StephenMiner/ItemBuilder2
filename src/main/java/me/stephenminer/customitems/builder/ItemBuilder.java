@@ -62,7 +62,7 @@ public class ItemBuilder {
                 if (entry != null && !entry.isEmpty())
                     returnList.add(ChatColor.translateAlternateColorCodes('&', entry));
             }
-        returnList.add(ChatColor.GRAY + id);
+        //returnList.add(ChatColor.GRAY + id);
         return returnList;
     }
 
@@ -133,9 +133,31 @@ public class ItemBuilder {
     private double mountMultiplier(){
         if (!config.getConfig().contains("mount-multiplier")) return 1;
         else return config.getConfig().getInt("mount-multiplier");
-
     }
 
+    private int shieldBreakerTicks(){
+        if (!config.getConfig().contains("shield-breaker-ticks")) return -1;
+        else return config.getConfig().getInt("shield-breaker-ticks");
+    }
+
+
+    private ItemMeta addCustomTags(ItemMeta meta){
+        if (twoHanded())
+            meta.getPersistentDataContainer().set(plugin.twoHanded, PersistentDataType.BOOLEAN, true);
+
+        int reach = getReach();
+        if (reach > 0)
+            meta.getPersistentDataContainer().set(plugin.reach,PersistentDataType.INTEGER,reach);
+
+        double multiplier = mountMultiplier();
+        if (multiplier != 1)
+            meta.getPersistentDataContainer().set(plugin.mounted,PersistentDataType.DOUBLE,multiplier);
+
+        int breakerTicks = shieldBreakerTicks();
+        if (breakerTicks != -1)
+            meta.getPersistentDataContainer().set(plugin.shieldbreaker,PersistentDataType.INTEGER,breakerTicks);
+        return meta;
+    }
 
     public ItemStack buildItem() {
         ItemStack item = new ItemStack(getMaterial());
@@ -153,14 +175,7 @@ public class ItemBuilder {
         if (getFlags() != null && getFlags().length != 0)
             meta.addItemFlags(getFlags());
         meta.setUnbreakable(getUnbreakable());
-        if (twoHanded())
-            meta.getPersistentDataContainer().set(HandleMelee.TWO_HANDED, PersistentDataType.BOOLEAN, true);
-        int reach = getReach();
-        if (reach > 0)
-            meta.getPersistentDataContainer().set(HandleMelee.REACH,PersistentDataType.INTEGER,reach);
-        double multiplier = mountMultiplier();
-        if (multiplier != 1)
-            meta.getPersistentDataContainer().set(HandleMelee.MOUNTED,PersistentDataType.DOUBLE,multiplier);
+        meta = addCustomTags(meta);
         item.setItemMeta(meta);
         BuildAttribute ba = new BuildAttribute(plugin, config);
         ItemStack newItem = ba.addAttributes(item);

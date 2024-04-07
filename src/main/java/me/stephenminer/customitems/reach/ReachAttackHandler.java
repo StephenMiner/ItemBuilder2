@@ -2,8 +2,8 @@ package me.stephenminer.customitems.reach;
 
 import me.stephenminer.customitems.CustomItems;
 import net.minecraft.server.level.ServerPlayer;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -29,7 +29,7 @@ public class ReachAttackHandler {
 
     public void hitEntity(LivingEntity living){
         if (living.hasMetadata(ReachAttackHandler.DATA_KEY(attacker.getUniqueId()))) {
-            System.out.println("Damage Denied");
+           // System.out.println("Damage Denied");
             living.removeMetadata(ReachAttackHandler.DATA_KEY(attacker.getUniqueId()),plugin);
             return;
         }

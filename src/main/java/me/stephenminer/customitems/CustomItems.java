@@ -7,7 +7,10 @@ import me.stephenminer.customitems.commands.CreateItemCompleter;
 import me.stephenminer.customitems.commands.ItemBuilderCmds;
 import me.stephenminer.customitems.inventories.InventoryEvents;
 import me.stephenminer.customitems.listeners.HandleMelee;
+import me.stephenminer.customitems.listeners.ShieldListener;
+import me.stephenminer.customitems.listeners.TwoHandedListener;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,8 +20,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public final class CustomItems extends JavaPlugin {
+/**
+ * SUPPORTED VERSIONS
+ * 1.20/1.20.1
+ * 1.20.2
+ * 1.20.4
+ */
 
+public final class CustomItems extends JavaPlugin {
+    public NamespacedKey reach;
+    public NamespacedKey twoHanded;
+    public NamespacedKey mounted;
+    public NamespacedKey shieldbreaker;
+    public NamespacedKey dummy;
     public ConfigFile Recipes;
     public ConfigFile Items;
 
@@ -26,6 +40,11 @@ public final class CustomItems extends JavaPlugin {
     public void onEnable(){
         Recipes = new ConfigFile(this, "recipes");
         Items = new ConfigFile(this, "items");
+        reach = new NamespacedKey(this,"reach");
+        twoHanded = new NamespacedKey(this,"twohanded");
+        mounted = new NamespacedKey(this,"mounted");
+        shieldbreaker = new NamespacedKey(this, "shieldbreaker");
+        dummy = new NamespacedKey(this,"dummy");
         registerCommands();
         addRecipes();
         registerEvents();
@@ -47,6 +66,8 @@ public final class CustomItems extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
       //  pm.registerEvents(new InventoryEvents(this), this);
         pm.registerEvents(new HandleMelee(), this);
+        pm.registerEvents(new TwoHandedListener(),this);
+        pm.registerEvents(new ShieldListener(), this);
     }
     private void addRecipes(){
         new BukkitRunnable(){
