@@ -4,6 +4,7 @@ import me.stephenminer.customitems.CustomItems;
 import net.minecraft.world.item.ShieldItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -11,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -25,6 +27,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class ShieldListener implements Listener {
@@ -54,6 +57,7 @@ public class ShieldListener implements Listener {
                 if (breakerTicks >= 0){
                  //   player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 999999,254));
                     player.setCooldown(Material.SHIELD, breakerTicks);
+                    player.getWorld().playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK,1,1);
                     shieldWorkaround(player);
                 }
             }
@@ -85,7 +89,6 @@ public class ShieldListener implements Listener {
                     int slot = slot(dummy, player.getInventory());
                     player.getInventory().setItem(slot,mainhand);
                 }
-                //TODO: durability calculations
             }, 2);
         }
 
@@ -97,11 +100,9 @@ public class ShieldListener implements Listener {
             Bukkit.getScheduler().runTaskLater(plugin,()->{
                 if (!player.isDead()){
                     int slot = slot(dummy, player.getInventory());
-                    System.out.println(slot);
                     player.getInventory().setItem(slot,offhand);
                 }
                 backupItems.remove(player.getUniqueId());
-                //TODO: durability calculations
             },2);
         }
 
@@ -139,10 +140,7 @@ public class ShieldListener implements Listener {
         player.getInventory().setItemInMainHand(save[0]);
         player.getInventory().setItemInOffHand(save[1]);
     }
-    @EventHandler
-    public void death(){
 
-    }
 
     private int breakerTag(ItemStack item){
         if (item == null || !item.hasItemMeta() || !item.getItemMeta().getPersistentDataContainer().has(plugin.shieldbreaker, PersistentDataType.INTEGER))

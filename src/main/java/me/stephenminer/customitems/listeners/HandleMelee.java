@@ -57,11 +57,13 @@ public class HandleMelee implements Listener {
             if (result != null){
                 living.setMetadata(ReachAttackHandler.DATA_KEY(player.getUniqueId()),new FixedMetadataValue(plugin,(byte) (0)));
                 applyMultipliers(event,mountMultiplier(item));
+              //  System.out.println(event.getDamage());
                 return;
             }
             if (living.hasMetadata(ReachAttackHandler.DATA_KEY(player.getUniqueId()))){
                 living.removeMetadata(ReachAttackHandler.DATA_KEY(player.getUniqueId()),plugin);
                 applyMultipliers(event,mountMultiplier(item));
+             //   System.out.println(event.getDamage());
 
             }else {
                 event.setCancelled(true);
@@ -79,7 +81,7 @@ public class HandleMelee implements Listener {
         Entity vehicle = player.getVehicle();
         if (vehicle instanceof LivingEntity && vehicle instanceof Vehicle) {
             event.setDamage(event.getDamage() * multiplier);
-
+            System.out.println(event.getDamage());
         }
 
     }
