@@ -31,6 +31,7 @@ public class RayTrace {
 
         for (Entity entity : entities){
             if (entity.equals(player)) continue;
+            if (entity.equals(player.getVehicle())) continue;
             BoundingBox entityBox = entity.getBoundingBox().expand(raySize);
             RayTraceResult hitResult = entityBox.rayTrace(start, dir, maxDistance);
             if (hitResult != null){
