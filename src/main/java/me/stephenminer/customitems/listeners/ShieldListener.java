@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -73,13 +74,17 @@ public class ShieldListener implements Listener {
 
     private void shieldWorkaround(Player player){
         ItemStack mainhand = player.getInventory().getItemInMainHand();
+        ItemStack dummy = dummy();
         ItemStack[] save = new ItemStack[2];
         save[0] = mainhand;
         if (mainhand.getType() == Material.SHIELD){
-            player.getInventory().setItemInMainHand(dummy());
+            player.getInventory().setItemInMainHand(dummy);
             Bukkit.getScheduler().runTaskLater(plugin,()->{
                 backupItems.remove(player.getUniqueId());
-                if (!player.isDead()) player.getInventory().setItemInMainHand(mainhand);
+                if (!player.isDead()) {
+                    int slot = slot(dummy, player.getInventory());
+                    player.getInventory().setItem(slot,mainhand);
+                }
                 //TODO: durability calculations
             }, 2);
         }
@@ -88,9 +93,13 @@ public class ShieldListener implements Listener {
         save[1] = offhand;
         backupItems.put(player.getUniqueId(),save);
         if (offhand.getType() == Material.SHIELD){
-            player.getInventory().setItemInOffHand(dummy());
+            player.getInventory().setItemInOffHand(dummy);
             Bukkit.getScheduler().runTaskLater(plugin,()->{
-                if (!player.isDead())player.getInventory().setItemInOffHand(offhand);
+                if (!player.isDead()){
+                    int slot = slot(dummy, player.getInventory());
+                    System.out.println(slot);
+                    player.getInventory().setItem(slot,offhand);
+                }
                 backupItems.remove(player.getUniqueId());
                 //TODO: durability calculations
             },2);
@@ -98,6 +107,13 @@ public class ShieldListener implements Listener {
 
     }
 
+
+    private int slot(ItemStack item, Inventory inv){
+        for (int i = 0; i < inv.getSize(); i++){
+            if (item.isSimilar(inv.getItem(i))) return i;
+        }
+        return -1;
+    }
     @EventHandler
     public void noDropDummy(PlayerDropItemEvent event){
         ItemStack item = event.getItemDrop().getItemStack();;
