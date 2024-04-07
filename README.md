@@ -19,6 +19,7 @@ two-handed: true
 display-name: '&6Display Name'
 custom-model-data: 22314
 mount-multiplier: 9
+shield-breaker-ticks: 40
 attributes:
   GENERIC_MAX_HEALTH:
     amount: 234.0
