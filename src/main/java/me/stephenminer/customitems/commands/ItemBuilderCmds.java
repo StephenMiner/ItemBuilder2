@@ -85,7 +85,9 @@ public class ItemBuilderCmds implements CommandExecutor {
                 }
                 String item = args[2];
                 String pname = args[1];
-                giveItemPlayer(item, sender, pname);
+                int amount = 1;
+                if (i > 3) amount = Integer.parseInt(args[3]);
+                giveItemPlayer(item, sender, pname, amount);
                 return true;
             }
             config = plugin.findConfig(args[1]);
@@ -244,7 +246,7 @@ public class ItemBuilderCmds implements CommandExecutor {
     }
 
 
-    private boolean giveItemPlayer(String item, CommandSender sender, String reciever) {
+    private boolean giveItemPlayer(String item, CommandSender sender, String reciever, int amount) {
         Player p = Bukkit.getPlayerExact(reciever);
         if (p == null) {
             sender.sendMessage(ChatColor.RED + "player isn't real!");
@@ -262,6 +264,7 @@ public class ItemBuilderCmds implements CommandExecutor {
         ItemStack ritem = ib.buildItem();
         if (item == null)
             return false;
+        ritem.setAmount(amount);
         p.getInventory().addItem(ritem);
         p.sendMessage(ChatColor.GREEN + "Recieved item!");
         sender.sendMessage(ChatColor.GREEN + "Gave item to " + reciever);

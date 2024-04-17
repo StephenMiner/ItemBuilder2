@@ -6,6 +6,7 @@ import me.stephenminer.customitems.commands.CreateItem;
 import me.stephenminer.customitems.commands.CreateItemCompleter;
 import me.stephenminer.customitems.commands.ItemBuilderCmds;
 import me.stephenminer.customitems.inventories.InventoryEvents;
+import me.stephenminer.customitems.listeners.GunListener;
 import me.stephenminer.customitems.listeners.HandleMelee;
 import me.stephenminer.customitems.listeners.ShieldListener;
 import me.stephenminer.customitems.listeners.TwoHandedListener;
@@ -28,11 +29,25 @@ import java.util.List;
  */
 
 public final class CustomItems extends JavaPlugin {
+    public NamespacedKey id;
     public NamespacedKey reach;
     public NamespacedKey twoHanded;
     public NamespacedKey mounted;
     public NamespacedKey shieldbreaker;
+    public NamespacedKey gun;
+    public NamespacedKey gunDamage;
+    public NamespacedKey ammo;
+    public NamespacedKey range;
+    public NamespacedKey decay;
+    public NamespacedKey decayRate;
+    public NamespacedKey ramTime;
+    public NamespacedKey powder;
+    public NamespacedKey projectiles;
+    public NamespacedKey triggerCooldown;
     public NamespacedKey dummy;
+    public NamespacedKey unstackable;
+    public NamespacedKey material;
+    public NamespacedKey equipCooldown;
     public ConfigFile Recipes;
     public ConfigFile Items;
 
@@ -40,14 +55,35 @@ public final class CustomItems extends JavaPlugin {
     public void onEnable(){
         Recipes = new ConfigFile(this, "recipes");
         Items = new ConfigFile(this, "items");
+        createAttributeKeys();
+        registerCommands();
+        addRecipes();
+        registerEvents();
+
+    }
+
+
+    private void createAttributeKeys(){
         reach = new NamespacedKey(this,"reach");
         twoHanded = new NamespacedKey(this,"twohanded");
         mounted = new NamespacedKey(this,"mounted");
         shieldbreaker = new NamespacedKey(this, "shieldbreaker");
+        gun = new NamespacedKey(this, "gun");
+        ammo = new NamespacedKey(this, "ammo");
+        range = new NamespacedKey(this, "range");
+        decayRate = new NamespacedKey(this, "decayrate");
+        decay = new NamespacedKey(this,"decay" );
+        id = new NamespacedKey(this,"id");
         dummy = new NamespacedKey(this,"dummy");
-        registerCommands();
-        addRecipes();
-        registerEvents();
+        gunDamage = new NamespacedKey(this,"gundamage");
+        ramTime = new NamespacedKey(this, "ramtime");
+        powder = new NamespacedKey(this, "powder");
+        projectiles = new NamespacedKey(this,"prjectiles");
+        triggerCooldown = new NamespacedKey(this,"triggercooldown");
+        material = new NamespacedKey(this,"mat");
+        unstackable = new NamespacedKey(this, "nostack");
+        equipCooldown = new NamespacedKey(this,"equipcd");
+
 
     }
     @Override
@@ -68,6 +104,7 @@ public final class CustomItems extends JavaPlugin {
         pm.registerEvents(new HandleMelee(), this);
         pm.registerEvents(new TwoHandedListener(),this);
         pm.registerEvents(new ShieldListener(), this);
+        pm.registerEvents(new GunListener(),this);
     }
     private void addRecipes(){
         new BukkitRunnable(){
@@ -91,7 +128,7 @@ public final class CustomItems extends JavaPlugin {
         if (!parent.exists()) parent.mkdir();
         File child = new File(parent, id + ".yml");
         if (child.exists()) return new ItemConfig(this, id);
-        else return null;
+        return null;
     }
     public List<String> filter(Collection<String> base, String match){
         if (match == null || match.isEmpty()) return new ArrayList<>(base);

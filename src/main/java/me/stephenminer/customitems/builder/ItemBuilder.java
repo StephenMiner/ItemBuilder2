@@ -10,6 +10,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -139,23 +140,39 @@ public class ItemBuilder {
         if (!config.getConfig().contains("shield-breaker-ticks")) return -1;
         else return config.getConfig().getInt("shield-breaker-ticks");
     }
+    private int triggerCooldown(){
+        if (!config.getConfig().contains("trigger-cooldown")) return -1;
+        else return config.getConfig().getInt("trigger-cooldown");
+    }
+    private boolean unstackable(){
+        return config.getConfig().getBoolean("unstackable");
+    }
 
 
     private ItemMeta addCustomTags(ItemMeta meta){
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        container.set(plugin.id,PersistentDataType.STRING,id);
+        container.set(plugin.material,PersistentDataType.STRING, getMaterial().name());
+        boolean unstackable = unstackable();
+        if (unstackable) container.set(plugin.unstackable,PersistentDataType.STRING,UUID.randomUUID().toString());
         if (twoHanded())
-            meta.getPersistentDataContainer().set(plugin.twoHanded, PersistentDataType.BOOLEAN, true);
+            container.set(plugin.twoHanded, PersistentDataType.BOOLEAN, true);
 
         int reach = getReach();
         if (reach > 0)
-            meta.getPersistentDataContainer().set(plugin.reach,PersistentDataType.INTEGER,reach);
+            container.set(plugin.reach,PersistentDataType.INTEGER,reach);
 
         double multiplier = mountMultiplier();
         if (multiplier != 1)
-            meta.getPersistentDataContainer().set(plugin.mounted,PersistentDataType.DOUBLE,multiplier);
+            container.set(plugin.mounted,PersistentDataType.DOUBLE,multiplier);
 
         int breakerTicks = shieldBreakerTicks();
         if (breakerTicks != -1)
-            meta.getPersistentDataContainer().set(plugin.shieldbreaker,PersistentDataType.INTEGER,breakerTicks);
+            container.set(plugin.shieldbreaker,PersistentDataType.INTEGER,breakerTicks);
+        int triggerCooldown = triggerCooldown();
+        if (triggerCooldown != -1)
+            container.set(plugin.triggerCooldown,PersistentDataType.INTEGER,triggerCooldown);
+
         return meta;
     }
 
@@ -176,6 +193,9 @@ public class ItemBuilder {
             meta.addItemFlags(getFlags());
         meta.setUnbreakable(getUnbreakable());
         meta = addCustomTags(meta);
+
+        GunBuilder gunBuilder = new GunBuilder(id, config);
+        meta = gunBuilder.buildGunAttributes(meta);
         item.setItemMeta(meta);
         BuildAttribute ba = new BuildAttribute(plugin, config);
         ItemStack newItem = ba.addAttributes(item);

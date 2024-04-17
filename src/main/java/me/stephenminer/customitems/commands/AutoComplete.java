@@ -34,7 +34,7 @@ public class AutoComplete implements TabCompleter {
         String args1 = args[0];
         if (args1.equalsIgnoreCase("give")) {
             if (length == 3)
-                return itemCompleter(args[1]);
+                return itemCompleter(args[2]);
             return playerItemCompleter(args[1]);
         }
         if (args1.equalsIgnoreCase("recipe"))

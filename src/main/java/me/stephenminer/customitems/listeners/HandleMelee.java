@@ -43,7 +43,7 @@ public class HandleMelee implements Listener {
         Entity entity = result.getHitEntity();
         if (entity instanceof LivingEntity living) {
             ReachAttackHandler handler = new ReachAttackHandler(player);
-            handler.hitEntity(living);
+            handler.hitEntity(living, reach);
         }
     }
 
