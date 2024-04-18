@@ -2,6 +2,7 @@ package me.stephenminer.customitems.gunutils;
 
 import me.stephenminer.customitems.CustomItems;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -29,7 +30,10 @@ public class GunFire {
         Location origin = shooter.getEyeLocation();
         Vector dir = origin.getDirection();
         BulletTrace trace = new BulletTrace(shooter, origin, dir,this, true);
-        trace.trace();
+        boolean hit = trace.trace();
+        if (hit){
+            shooter.playSound(shooter, Sound.ENTITY_ARROW_HIT_PLAYER,1,1);
+        }
     }
 
 

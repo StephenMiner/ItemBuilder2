@@ -4,6 +4,8 @@ import me.stephenminer.customitems.CustomItems;
 import me.stephenminer.customitems.ItemConfig;
 import me.stephenminer.customitems.gunutils.GunReader;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -78,7 +80,7 @@ public class GunBuilder {
      * @param meta the ItemMeta to write to
      * @return ItemMeta with tags for gun if any are in the config
      */
-    public ItemMeta buildGunAttributes(ItemMeta meta){
+    public ItemMeta buildGunAttributes(Material type, ItemMeta meta){
         if (!isGun()) return meta;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         String gunType = gunType();
@@ -117,8 +119,12 @@ public class GunBuilder {
         GunReader reader = new GunReader(null, meta);
         String defaultStage = reader.getFiringStage();
         List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
-        lore.add(0,ChatColor.YELLOW + "" + ChatColor.BOLD + defaultStage);
+        lore.add(0,ChatColor.YELLOW + "" + defaultStage);
         meta.setLore(lore);
+        if (!defaultStage.equals("ready to fire")){
+            Damageable damageable = (Damageable) meta;
+            damageable.setDamage(type.getMaxDurability()-1);
+        }
         return meta;
     }
 

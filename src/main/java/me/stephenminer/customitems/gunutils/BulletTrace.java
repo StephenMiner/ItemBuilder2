@@ -43,7 +43,7 @@ public class BulletTrace {
     }
 
 
-    public void trace(){
+    public boolean trace(){
         Location base = origin.clone();
         World world = shooter.getWorld();
         //world.spawnParticle(Particle.CAMPFIRE_SIGNAL_SMOKE,base.clone().add(dir),1);
@@ -59,20 +59,25 @@ public class BulletTrace {
                 world.spawnParticle(Particle.BLOCK_CRACK,base,20, intersecting.getType().createBlockData());
                 SoundGroup group = intersecting.getBlockData().getSoundGroup();
                 world.playSound(base, group.getBreakSound(),group.getVolume(),group.getPitch());
-                return;
+                return false;
             }
             LivingEntity hit = checkEntityIntersection(base, box);
             if (hit != null){
+                double damage = host.damage();
                 world.spawnParticle(Particle.BLOCK_CRACK,base, 20,Material.REDSTONE_BLOCK.createBlockData());
-                int decayBlocks = Math.max(0,i - (int) host.decayRange);
-                double subtractor = host.decayRate*decayBlocks;
-                double damage = host.damage() - subtractor;
+                if (host.decayRange() > 0) {
+                    int decayBlocks = Math.max(0, i - (int) host.decayRange);
+                    double subtractor = host.decayRate * decayBlocks;
+                    damage -= subtractor;
+                }
+
                 hit.damage(damage,shooter);
                 if (!iframes) hit.setNoDamageTicks(0);
-                return;
+                return true;
             }
             base.add(dir);
         }
+        return false;
     }
 
     private Block checkBlockIntersection(Location position, BoundingBox bounds){

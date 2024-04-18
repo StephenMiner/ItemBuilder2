@@ -177,7 +177,8 @@ public class ItemBuilder {
     }
 
     public ItemStack buildItem() {
-        ItemStack item = new ItemStack(getMaterial());
+        Material mat = getMaterial();
+        ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
         if (hasCustomModelData())
             meta.setCustomModelData(getCustomModelData());
@@ -195,7 +196,7 @@ public class ItemBuilder {
         meta = addCustomTags(meta);
 
         GunBuilder gunBuilder = new GunBuilder(id, config);
-        meta = gunBuilder.buildGunAttributes(meta);
+        meta = gunBuilder.buildGunAttributes(mat, meta);
         item.setItemMeta(meta);
         BuildAttribute ba = new BuildAttribute(plugin, config);
         ItemStack newItem = ba.addAttributes(item);

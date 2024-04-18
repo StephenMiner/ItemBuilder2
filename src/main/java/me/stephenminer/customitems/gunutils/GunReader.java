@@ -135,16 +135,24 @@ public class GunReader {
 
     }
 
-    public void updateDurability(){
+    public void updateDurability(boolean newMeta){
         if (meta instanceof Damageable){
             if (!getFiringStage().equals("ready to fire")) {
-                ((Damageable) meta).setDamage(host.getType().getMaxDurability() - 1);
-                host.setItemMeta(meta);
+                Damageable damageable;
+                if (newMeta) {
+                     damageable= (Damageable) host.getItemMeta();
+                }else damageable = (Damageable) meta;
+                damageable.setDamage(host.getType().getMaxDurability() - 1);
+                host.setItemMeta(damageable);
+
             }else{
                 ((Damageable) meta).setDamage(0);
                 host.setItemMeta(meta);
             }
         }
+    }
+    public void updateDurability(){
+        updateDurability(false);
     }
 
     public int equipCooldown(){
@@ -170,10 +178,13 @@ public class GunReader {
 
     public void setFiringStage(){
         List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
+        String current = getFiringStage();
         String nextState = findNextStage();
         if (lore.isEmpty())
-            lore.add(ChatColor.YELLOW + "" + ChatColor.BOLD + nextState);
-        else lore.set(0, ChatColor.YELLOW + "" + ChatColor.BOLD + nextState);
+            lore.add(ChatColor.YELLOW + nextState);
+        else if(lore.get(0).equals(ChatColor.YELLOW + current))
+            lore.set(0, ChatColor.YELLOW + nextState);
+        else lore.add(0,ChatColor.YELLOW + nextState);
         meta.setLore(lore);
         host.setItemMeta(meta);
         changeItemType(nextState);
