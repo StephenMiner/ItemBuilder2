@@ -104,10 +104,12 @@ public class GunListener implements Listener {
         if (!event.hasItem()) return;
         ItemStack bow = event.getItem();
         Player player = event.getPlayer();
+
         ItemMeta meta = bow.getItemMeta();
         if (bow.getType() == Material.AIR || !bow.hasItemMeta()) return;
         if (!isGun(meta)) return;
         event.setCancelled(true);
+        if (player.hasCooldown(bow.getType())) return;
         if (meta instanceof CrossbowMeta crossbowMeta) {
             GunReader reader = new GunReader(bow, crossbowMeta);
             if (reader.getFiringStage().equals("ready to fire")) {
