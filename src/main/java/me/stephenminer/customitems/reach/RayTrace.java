@@ -1,5 +1,7 @@
 package me.stephenminer.customitems.reach;
 
+import org.bukkit.FluidCollisionMode;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
@@ -22,6 +24,12 @@ public class RayTrace {
     public RayTraceResult rayTrace(double maxDistance, double raySize){
         Vector start = player.getEyeLocation().toVector();
         Vector dir = player.getEyeLocation().getDirection().clone().normalize().multiply(maxDistance);
+        World world = player.getWorld();
+        RayTraceResult result = world.rayTrace(player.getEyeLocation(),player.getEyeLocation().getDirection(),maxDistance, FluidCollisionMode.NEVER,false,raySize,
+                entity ->
+            !entity.equals(player) && !entity.equals(player.getVehicle())
+        );
+        /*
         BoundingBox box = BoundingBox.of(start, start).expandDirectional(dir).expand(raySize);
         Collection<Entity> entities = player.getWorld().getNearbyEntities(box);
 
@@ -44,6 +52,9 @@ public class RayTrace {
             }
         }
         return nearestEntity != null ? new RayTraceResult(nearestHitResult.getHitPosition(), nearestEntity, nearestHitResult.getHitBlockFace()) : null;
+
+         */
+        return result;
     }
 
     public void setPlayer(Player player){

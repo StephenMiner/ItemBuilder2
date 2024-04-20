@@ -29,12 +29,12 @@ public class ReachAttackHandler {
 
     public void hitEntity(LivingEntity living, double range){
         if (living.hasMetadata(ReachAttackHandler.DATA_KEY(attacker.getUniqueId()))) {
-           // System.out.println("Damage Denied");
+          //  System.out.println("Damage Denied");
             living.removeMetadata(ReachAttackHandler.DATA_KEY(attacker.getUniqueId()),plugin);
             return;
         }
         ServerPlayer craftPlayer = ((CraftPlayer) attacker).getHandle();
-        living.setMetadata(ReachAttackHandler.DATA_KEY(attacker.getUniqueId()),new FixedMetadataValue(plugin,(byte) (0)));
+       // living.setMetadata(ReachAttackHandler.DATA_KEY(attacker.getUniqueId()),new FixedMetadataValue(plugin,(byte) (0)));
         craftPlayer.attack(((CraftLivingEntity) living).getHandle());
         if (craftPlayer.distanceToSqr(((CraftLivingEntity)living).getHandle()) >= 9){
 

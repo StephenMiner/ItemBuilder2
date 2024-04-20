@@ -53,21 +53,37 @@ public class HandleMelee implements Listener {
             ItemStack item = player.getInventory().getItemInMainHand();
             if (!hasReach(item)) return;
             RayTrace trace = new RayTrace(player);
-            RayTraceResult result = trace.rayTrace(2.5, 0.1);
+            RayTraceResult result = trace.rayTrace(3.5, 0.1);
             if (result != null){
+                double trueRange = reachTag(item);
+                if (trueRange < 3.5){
+                    result = trace.rayTrace(trueRange,0.1);
+                    if (result == null){
+                        event.setCancelled(true);
+                        return;
+                    }
+                }
                 living.setMetadata(ReachAttackHandler.DATA_KEY(player.getUniqueId()),new FixedMetadataValue(plugin,(byte) (0)));
                 applyMultipliers(event,mountMultiplier(item));
+             //   System.out.println("normal damage");
               //  System.out.println(event.getDamage());
                 return;
-            }
-            if (living.hasMetadata(ReachAttackHandler.DATA_KEY(player.getUniqueId()))){
+            }else{
                 living.removeMetadata(ReachAttackHandler.DATA_KEY(player.getUniqueId()),plugin);
                 applyMultipliers(event,mountMultiplier(item));
+            //    System.out.println("reach damage");
+            }
+            /*
+            if (living.hasMetadata(ReachAttackHandler.DATA_KEY(player.getUniqueId()))){
+
+
              //   System.out.println(event.getDamage());
 
             }else {
                 event.setCancelled(true);
             }
+
+             */
         }
     }
 
