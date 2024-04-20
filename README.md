@@ -2,6 +2,14 @@
 The recipe function is currently untested in the current state and probably doesn't work. When will I fix this, idk whenever someone says they need it probably. Also some commands also dont really matter anymore such as /itembuilder reload - You should never need to use this command. You can create and edit item files at your leisure.
 
 
+
+
+
+
+
+
+
+
 You can create items with the /createItem [id] [material] and then /itembuilder command.
 
 
@@ -50,3 +58,9 @@ lore:
 - line_2
 - line_3
 ```
+
+Here is an example of a ```gun-type: SPREAD``` weapon:  
+
+
+https://github.com/StephenMiner/ItemBuilder2/assets/64863697/faceab3a-a83a-410b-99d5-085f650c3d2a
+
