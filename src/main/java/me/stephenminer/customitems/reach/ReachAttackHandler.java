@@ -6,7 +6,6 @@ import org.bukkit.craftbukkit.v1_20_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
