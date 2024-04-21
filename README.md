@@ -59,6 +59,28 @@ lore:
 - line_3
 ```
 
+All loading functions related to guns are completed via the offhand key (sorry no options for that)
+All firing is to be done with a right click
+When a gun is loaded, for resource pack reasons, the item will be changed to a crossbow
+
+here is an example of a gun config:
+```
+material: DIAMOND_HOE
+gun-type: spread
+ammo: musketball
+powder: blackpowder
+gun-damage: 4
+range: 50
+decay-range: 25
+decay-rate: 0.05
+ram-time: 60
+trigger-cooldown: 100
+projectiles: 6
+```
+You do not have to define decay-ranges or decay-rates.
+You don't need to define ammo or powder or ram-time, but without them the gun will be able to fire without anything or without whatever you didn't include.
+projectile should only be used if you have ```gun-type: spread``` the other option is ```gun-type: line```
+
 Here is an example of a ```gun-type: SPREAD``` weapon:  
 
 
