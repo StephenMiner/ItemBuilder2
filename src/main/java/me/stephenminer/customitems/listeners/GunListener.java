@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.*;
@@ -99,6 +100,16 @@ public class GunListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void preventDamaging(PlayerItemDamageEvent event){
+        ItemStack item = event.getItem();
+        if (!item.hasItemMeta() || item.getType().isAir()) return;
+        ItemMeta meta = item.getItemMeta();
+        if (isGun(meta)){
+            event.setCancelled(true);
+        }
+    }
     @EventHandler (priority = EventPriority.LOWEST)
     public void preventGunInteraction(PlayerInteractEvent event){
         if (!event.hasItem()) return;
@@ -110,7 +121,8 @@ public class GunListener implements Listener {
         if (!isGun(meta)) return;
         event.setCancelled(true);
         if (player.hasCooldown(bow.getType())) return;
-        if (meta instanceof CrossbowMeta crossbowMeta) {
+        Action action = event.getAction();
+        if (meta instanceof CrossbowMeta crossbowMeta && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
             GunReader reader = new GunReader(bow, crossbowMeta);
             if (reader.getFiringStage().equals("ready to fire")) {
                 fire(player,reader);
