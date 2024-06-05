@@ -3,49 +3,51 @@ package me.stephenminer.customitems.gunutils;
 import me.stephenminer.customitems.CustomItems;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 
 public class BulletTrace {
     private final CustomItems plugin;
-    private final Player shooter;
+    private final LivingEntity living;
     private final Location origin;
     private final Vector dir;
     private final GunFire host;
     private final boolean iframes;
     private final double boxSize;
+    private final Set<EntityType> blacklist;
 
     /**
      *
-     * @param player
+     * @param living
      * @param origin
      * @param dir
      * @param gunfire
      */
-    public BulletTrace(Player player, Location origin, Vector dir, GunFire gunfire, boolean iframes){
+    public BulletTrace(LivingEntity living, Location origin, Vector dir, GunFire gunfire, boolean iframes){
+        this(living,origin,dir,gunfire,iframes, null);
+    }
+    public BulletTrace(LivingEntity living, Location origin, Vector dir, GunFire gunfire, boolean iframes, Set<EntityType> blacklist){
         boxSize = 0.15;
         this.plugin = JavaPlugin.getPlugin(CustomItems.class);
-        this.shooter = player;
+        this.living = living;
         this.origin = origin;
         this.dir = dir;
         this.host = gunfire;
         this.iframes = iframes;
+        this.blacklist = blacklist;
     }
 
 
-    public boolean trace(){
+    public LivingEntity trace(){
         Location base = origin.clone();
-        World world = shooter.getWorld();
+        World world = living.getWorld();
         //world.spawnParticle(Particle.CAMPFIRE_SIGNAL_SMOKE,base.clone().add(dir),1);
         for (int i = 0; i < 2; i++)
             world.spawnParticle(Particle.CAMPFIRE_COSY_SMOKE,base.clone().add(dir),ThreadLocalRandom.current().nextInt(1));
@@ -59,10 +61,11 @@ public class BulletTrace {
                 world.spawnParticle(Particle.BLOCK_CRACK,base,20, intersecting.getType().createBlockData());
                 SoundGroup group = intersecting.getBlockData().getSoundGroup();
                 world.playSound(base, group.getBreakSound(),group.getVolume(),group.getPitch());
-                return false;
+                return null;
             }
             LivingEntity hit = checkEntityIntersection(base, box);
             if (hit != null){
+                if (blacklist != null && blacklist.contains(hit.getType())) continue;
                 double damage = host.damage();
                 world.spawnParticle(Particle.BLOCK_CRACK,base, 20,Material.REDSTONE_BLOCK.createBlockData());
                 if (host.decayRange() > 0) {
@@ -71,13 +74,13 @@ public class BulletTrace {
                     damage -= subtractor;
                 }
 
-                hit.damage(damage,shooter);
+                hit.damage(damage, living);
                 if (!iframes) hit.setNoDamageTicks(0);
-                return true;
+                return hit;
             }
             base.add(dir);
         }
-        return false;
+        return null;
     }
 
     private Block checkBlockIntersection(Location position, BoundingBox bounds){
@@ -93,7 +96,7 @@ public class BulletTrace {
 
     private LivingEntity checkEntityIntersection(Location position, BoundingBox bounds){
         World world = position.getWorld();
-        Collection<Entity> inBox = world.getNearbyEntities(bounds, (entity -> entity instanceof LivingEntity && !shooter.equals(entity)));
+        Collection<Entity> inBox = world.getNearbyEntities(bounds, (entity -> entity instanceof LivingEntity livingEntity && !livingEntity.equals(living) && (blacklist == null || !blacklist.contains(livingEntity.getType()))));
         if (inBox.size() < 1) return null;
         int rand = ThreadLocalRandom.current().nextInt(inBox.size());
         int count = 0;

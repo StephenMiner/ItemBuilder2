@@ -8,6 +8,9 @@ import me.stephenminer.customitems.gunutils.SpreadGunFire;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Evoker;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -138,7 +141,8 @@ public class GunListener implements Listener {
             return;
         }
         if (reader.validPowder(offhand)) {
-            offhand.setAmount(offhand.getAmount() - 1);
+            if (!reader.infinity())
+                offhand.setAmount(offhand.getAmount() - 1);
             player.getWorld().playSound(player.getLocation(), Sound.BLOCK_SAND_PLACE, 2, 1);
             reader.setFiringStage();
             reader.updateDurability();
@@ -153,7 +157,8 @@ public class GunListener implements Listener {
             return;
         }
         if (reader.validAmmo(offhand)) {
-            offhand.setAmount(offhand.getAmount() - 1);
+            if (!reader.infinity())
+                offhand.setAmount(offhand.getAmount() - 1);
             player.getWorld().playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1, 2);
             reader.setFiringStage();
             reader.updateDurability();
