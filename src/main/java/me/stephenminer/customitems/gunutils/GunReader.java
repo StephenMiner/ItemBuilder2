@@ -136,6 +136,10 @@ public class GunReader {
 
     }
 
+    /**
+     * Updates the durability of the gun item so it acts as a progress bar if ramrodding option is enabled
+     * @param newMeta define whether a new item meta copy should be created or if the internally stored itemmeta can be used
+     */
     public void updateDurability(boolean newMeta){
         if (meta instanceof Damageable){
             if (!getFiringStage().equals("ready to fire")) {
@@ -155,6 +159,8 @@ public class GunReader {
     public void updateDurability(){
         updateDurability(false);
     }
+
+
 
     public int equipCooldown(){
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -177,6 +183,11 @@ public class GunReader {
         else return invalidStageCase();
     }
 
+
+    /**
+     * Edits the gun item state to move it to next firing stage (ie from empty to powder loaded)
+     * Right now you can't change the order of stages, it is defined by findNextStage()
+     */
     public void setFiringStage(){
         List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
         String current = getFiringStage();
@@ -191,6 +202,10 @@ public class GunReader {
         changeItemType(nextState);
 
     }
+
+    /**
+     * Changes the gun item type to a crossbow when the gun is ready to fire for texture pack reasons
+     **/
     private void changeItemType(String stage){
         if (stage.equals("ready to fire")){
             Bukkit.getScheduler().runTaskLater(plugin,()->{
@@ -240,6 +255,11 @@ public class GunReader {
         }
         return "ready to firer";
     }
+
+    /**
+     * To be used if the gun item doesn't have any firing stage attached to it
+     * @return the first available firing stage the gun can have
+     */
     private String invalidStageCase(){
         String ammo = readAmmo();
         String powder = readPowder();

@@ -20,8 +20,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.RayTraceResult;
 
-import java.util.HashSet;
-
 public class HandleMelee implements Listener {
 
     private final CustomItems plugin;
@@ -43,7 +41,7 @@ public class HandleMelee implements Listener {
         Entity entity = result.getHitEntity();
         if (entity instanceof LivingEntity living) {
             ReachAttackHandler handler = new ReachAttackHandler(player);
-            handler.hitEntity(living, reach);
+            handler.hitEntity(living);
         }
     }
 
