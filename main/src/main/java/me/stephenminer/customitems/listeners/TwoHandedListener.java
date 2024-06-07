@@ -1,6 +1,5 @@
 package me.stephenminer.customitems.listeners;
 
-import it.unimi.dsi.fastutil.Hash;
 import me.stephenminer.customitems.CustomItems;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

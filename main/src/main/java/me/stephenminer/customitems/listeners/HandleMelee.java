@@ -3,6 +3,7 @@ package me.stephenminer.customitems.listeners;
 import me.stephenminer.customitems.CustomItems;
 import me.stephenminer.customitems.reach.RayTrace;
 import me.stephenminer.customitems.reach.ReachAttackHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -30,9 +31,11 @@ public class HandleMelee implements Listener {
 
     @EventHandler
     public void onArmSwing(PlayerAnimationEvent event){
+
         if (event.getAnimationType() != PlayerAnimationType.ARM_SWING) return;
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
         Player player = event.getPlayer();
+
         if (!hasReach(item)) return;
         int reach = reachTag(item);
         RayTrace ray = new RayTrace(player);
@@ -40,9 +43,24 @@ public class HandleMelee implements Listener {
         if (result == null) return;
         Entity entity = result.getHitEntity();
         if (entity instanceof LivingEntity living) {
-            ReachAttackHandler handler = new ReachAttackHandler(player);
+            ReachAttackHandler handler = reflectClass(player);
+            if (handler == null) return;
             handler.hitEntity(living);
+           // ReachAttackHandler handler = new ReachAttackHandlerImpl(player);
+         //   handler.hitEntity(living);
         }
+
+    }
+
+    private ReachAttackHandler reflectClass(Player player){
+        ReachAttackHandler out;
+        try{
+            String packageName = "me.stephenminer";
+            String name = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+            out = (ReachAttackHandler) Class.forName(packageName +"." +  name + ".ReachAttackHandlerImpl").getConstructor(Player.class).newInstance(player);
+            return out;
+        }catch (Exception e){ e.printStackTrace();}
+        return null;
     }
 
     @EventHandler

@@ -10,6 +10,7 @@ import me.stephenminer.customitems.listeners.GunListener;
 import me.stephenminer.customitems.listeners.HandleMelee;
 import me.stephenminer.customitems.listeners.ShieldListener;
 import me.stephenminer.customitems.listeners.TwoHandedListener;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.PluginManager;
@@ -55,6 +56,7 @@ public final class CustomItems extends JavaPlugin {
     public void onEnable(){
         Recipes = new ConfigFile(this, "recipes");
         Items = new ConfigFile(this, "items");
+
         createAttributeKeys();
         registerCommands();
         addRecipes();
