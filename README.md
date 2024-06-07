@@ -1,3 +1,6 @@
+Supported Versions: 1.20.2,1.20.4
+
+
 ***NOTE***
 The recipe function is currently untested in the current state and probably doesn't work. When will I fix this, idk whenever someone says they need it probably. Also some commands also dont really matter anymore such as /itembuilder reload - You should never need to use this command. You can create and edit item files at your leisure.
 
