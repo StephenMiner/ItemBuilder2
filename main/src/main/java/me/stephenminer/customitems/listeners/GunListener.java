@@ -246,6 +246,7 @@ public class GunListener implements Listener {
         GunFire gunFire;
         if (type == GunBuilder.GunType.LINE) gunFire = new GunFire(player,reader.readDamage(),reader.readRange(), decayRate,decayRange);
         else gunFire = new SpreadGunFire(player,reader.readDamage(),reader.readRange(),reader.readDecayRate(),reader.readDecayRange(),reader.readProjectiles());
+        gunFire.setIgnoreArmor(reader.readIgnoreArmor());
         gunFire.shoot();
         reader.updateDurability(true);
         player.setCooldown(reader.readOGMaterial(),reader.readCooldown());

@@ -37,7 +37,7 @@ public class BulletTrace {
         this(living,origin,dir,gunfire,iframes, null);
     }
     public BulletTrace(LivingEntity living, Location origin, Vector dir, GunFire gunfire, boolean iframes, Set<EntityType> blacklist){
-        boxSize = 0.15;
+        boxSize = 0.2;
         this.plugin = JavaPlugin.getPlugin(CustomItems.class);
         this.living = living;
         this.origin = origin;
@@ -76,9 +76,8 @@ public class BulletTrace {
                     double subtractor = host.decayRate * decayBlocks;
                     damage -= subtractor;
                 }
-
-                hit.damage(damage, living);
                 hit.setMetadata("gunap",new FixedMetadataValue(plugin,host.getIgnoreArmor()));
+                hit.damage(damage, living);
                 if (!iframes) hit.setNoDamageTicks(0);
                 return hit;
             }
