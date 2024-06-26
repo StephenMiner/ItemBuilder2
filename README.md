@@ -83,13 +83,15 @@ gun-damage: 4
 range: 50
 ##[Not Required] The amount of blocks the bullet will travel before damage decay is applied
 decay-range: 25
-##The rate per block at which damage will decay after the decay-range is hit
+##[Not Required] The rate per block at which damage will decay after the decay-range is hit
 decay-rate: 0.05
 ##How much time in ticks it should take to ram the powder and shot into the gun
 ##If not present, the "ramming" firing stage will be skipped
 ram-time: 60
-##Cooldown on gun before it can be loaded/shot again (in ticks)
+##[Not Needed] Cooldown placed on the weapon when it is shot/triggered
 trigger-cooldown: 100
+##[Not needed] The cooldown applied (in ticks) when the weapon is equiped
+##equip-cooldown: 2
 ##Only applicable for gun-type: spread
 ##Defines how much projectiles will be shot in a singular use (ammo costs still remain at 1)
 projectiles: 6
