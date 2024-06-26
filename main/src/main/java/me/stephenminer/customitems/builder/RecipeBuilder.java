@@ -1,7 +1,9 @@
 package me.stephenminer.customitems.builder;
 
 import me.stephenminer.customitems.CustomItems;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +18,7 @@ public class RecipeBuilder {
         this.id = id;
     }
     public boolean hasIngredient(String placement){
+
         return plugin.Recipes.getConfig().contains("recipes." + id + "." + placement);
     }
 

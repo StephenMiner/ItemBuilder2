@@ -5,12 +5,10 @@ import me.stephenminer.customitems.commands.AutoComplete;
 import me.stephenminer.customitems.commands.CreateItem;
 import me.stephenminer.customitems.commands.CreateItemCompleter;
 import me.stephenminer.customitems.commands.ItemBuilderCmds;
-import me.stephenminer.customitems.inventories.InventoryEvents;
 import me.stephenminer.customitems.listeners.GunListener;
 import me.stephenminer.customitems.listeners.HandleMelee;
 import me.stephenminer.customitems.listeners.ShieldListener;
 import me.stephenminer.customitems.listeners.TwoHandedListener;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.PluginManager;
@@ -49,6 +47,7 @@ public final class CustomItems extends JavaPlugin {
     public NamespacedKey unstackable;
     public NamespacedKey material;
     public NamespacedKey equipCooldown;
+    public NamespacedKey gunIgnoreArmor;
     public ConfigFile Recipes;
     public ConfigFile Items;
 
@@ -85,6 +84,7 @@ public final class CustomItems extends JavaPlugin {
         material = new NamespacedKey(this,"mat");
         unstackable = new NamespacedKey(this, "nostack");
         equipCooldown = new NamespacedKey(this,"equipcd");
+        gunIgnoreArmor = new NamespacedKey( this, "gunap");
 
 
     }

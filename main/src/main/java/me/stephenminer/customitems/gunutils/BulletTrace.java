@@ -4,6 +4,9 @@ import me.stephenminer.customitems.CustomItems;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
@@ -75,6 +78,7 @@ public class BulletTrace {
                 }
 
                 hit.damage(damage, living);
+                hit.setMetadata("gunap",new FixedMetadataValue(plugin,host.getIgnoreArmor()));
                 if (!iframes) hit.setNoDamageTicks(0);
                 return hit;
             }
@@ -111,5 +115,9 @@ public class BulletTrace {
         return (LivingEntity) selection;
     }
 
+
+    public void setIgnoreArmor(float ignoreArmor){
+
+    }
 
 }

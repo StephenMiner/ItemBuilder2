@@ -17,6 +17,8 @@ public class GunFire {
     protected LivingEntity shooter;
     protected double damage, range, decayRange, decayRate;
     protected final Set<EntityType> blacklist;
+    //A modifier from 0-1.0 where 0 represents 0% damage ignored due to armor, and 1 representing 100%
+    protected float ignoreArmor;
 
     public GunFire(LivingEntity shooter, double damage, double range, double decayRate, double decayRange, Set<EntityType> blacklist){
         this.plugin = JavaPlugin.getPlugin(CustomItems.class);
@@ -56,5 +58,21 @@ public class GunFire {
     public double range(){ return range; }
     public double decayRange(){ return decayRange; }
     public double decayRate(){ return decayRate; }
+
+    /**
+     *
+     * @param ignoreArmor A float from 0-1.0 where 0 represents 0% damage ignored due to armor, and 1 representing 100%
+     */
+    public void setIgnoreArmor(float ignoreArmor){
+        this.ignoreArmor = ignoreArmor;
+    }
+
+    /**
+     *
+     * @return A float from 0-1.0 where 0 represents 0% damage ignored due to armor, and 1 representing 100%
+     */
+    public float getIgnoreArmor(){
+        return ignoreArmor;
+    }
 
 }

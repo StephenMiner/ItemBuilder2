@@ -69,16 +69,32 @@ When a gun is loaded, for resource pack reasons, the item will be changed to a c
 here is an example of a gun config:
 ```
 material: DIAMOND_HOE
+##Can be either spread or line, spread will create a shotgun like effect while line is a single straight line
 gun-type: spread
+##The item id that can be used as ammo. IDs should be the names of other item files. 
+##If not present, the "load ammo" firing stage will be skipped
 ammo: musketball
+##The item id that can be used as powder. IDs should be the names of other item files
+##If not present, the "load powder" firing stage will be skipped
 powder: blackpowder
+##How much raw damage the each bullet should do
 gun-damage: 4
+##Range of the gun
 range: 50
+##[Not Required] The amount of blocks the bullet will travel before damage decay is applied
 decay-range: 25
+##The rate per block at which damage will decay after the decay-range is hit
 decay-rate: 0.05
+##How much time in ticks it should take to ram the powder and shot into the gun
+##If not present, the "ramming" firing stage will be skipped
 ram-time: 60
+##Cooldown on gun before it can be loaded/shot again (in ticks)
 trigger-cooldown: 100
+##Only applicable for gun-type: spread
+##Defines how much projectiles will be shot in a singular use (ammo costs still remain at 1)
 projectiles: 6
+##Defines how much damage as a % should be affected by armor, a value from 0.0-1.0 with 0.0 representing full armor piercing.
+gunap: 1
 ```
 You do not have to define decay-ranges or decay-rates.
 You don't need to define ammo or powder or ram-time, but without them the gun will be able to fire without anything or without whatever you didn't include.

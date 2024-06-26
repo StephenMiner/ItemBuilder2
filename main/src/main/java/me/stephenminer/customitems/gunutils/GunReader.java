@@ -100,6 +100,13 @@ public class GunReader {
             return container.get(plugin.triggerCooldown,PersistentDataType.INTEGER);
         else return -1;
     }
+
+    public float readIgnoreArmor(){
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        if (container.has(plugin.gunIgnoreArmor,PersistentDataType.FLOAT))
+            return container.get(plugin.gunIgnoreArmor, PersistentDataType.FLOAT);
+        else return 1;
+    }
     public Material readOGMaterial(){
         PersistentDataContainer container = meta.getPersistentDataContainer();
         Material mat = host.getType();
@@ -201,6 +208,18 @@ public class GunReader {
         host.setItemMeta(meta);
         changeItemType(nextState);
 
+    }
+    public void setFiringStage(String stage){
+        List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
+        String current = getFiringStage();
+        if (lore.isEmpty())
+            lore.add(ChatColor.YELLOW + stage);
+        else if(lore.get(0).equals(ChatColor.YELLOW + current))
+            lore.set(0, ChatColor.YELLOW + stage);
+        else lore.add(0,ChatColor.YELLOW + stage);
+        meta.setLore(lore);
+        host.setItemMeta(meta);
+        changeItemType(stage);
     }
 
     /**

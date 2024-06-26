@@ -10,11 +10,14 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
@@ -66,7 +69,15 @@ public class GunListener implements Listener {
 
      */
 
-
+    @EventHandler
+    public void handleAP(EntityDamageByEntityEvent event){
+        Entity hit = event.getEntity();
+        if (hit.hasMetadata("gunap")){
+            float ap = hit.getMetadata("gunap").get(0).asFloat();
+            hit.removeMetadata("gunap",plugin);
+            event.setDamage(EntityDamageEvent.DamageModifier.ARMOR,event.getDamage(EntityDamageEvent.DamageModifier.ARMOR) * ap);
+        }
+    }
 
     @EventHandler
     public void loading(PlayerSwapHandItemsEvent event){

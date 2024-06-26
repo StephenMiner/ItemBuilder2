@@ -74,6 +74,11 @@ public class GunBuilder {
         else return file.getConfig().getInt("equip-cooldown");
     }
 
+    private float ignoreArmor(){
+        if (!file.getConfig().contains("gunap")) return 1;
+        else return (float) Math.min(1,file.getConfig().getDouble("gunap"));
+    }
+
 
     /**
      *
@@ -115,7 +120,9 @@ public class GunBuilder {
         int equipCooldown = equipCooldown();
         if (equipCooldown != -1)
             container.set(plugin.equipCooldown,PersistentDataType.INTEGER,equipCooldown);
-
+        float gunAp = ignoreArmor();
+        if (gunAp != 1)
+            container.set(plugin.gunIgnoreArmor,PersistentDataType.FLOAT,gunAp);
         GunReader reader = new GunReader(null, meta);
         String defaultStage = reader.getFiringStage();
         List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
