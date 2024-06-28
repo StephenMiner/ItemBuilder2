@@ -124,6 +124,13 @@ public class ItemBuilder {
         return config.getConfig().getBoolean("two-handed");
     }
 
+    private float playerBonus() {
+        return (float) config.getConfig().getDouble("player-bonus");
+    }
+    private float mobBonus(){
+        return (float) config.getConfig().getDouble("mob-bonus");
+    }
+
     private boolean hasCustomModelData(){
         return config.getConfig().contains("custom-model-data");
     }
@@ -146,6 +153,14 @@ public class ItemBuilder {
     }
     private boolean unstackable(){
         return config.getConfig().getBoolean("unstackable");
+    }
+
+    private boolean rangeMelee(){
+        return config.getConfig().getBoolean("range-melee");
+    }
+
+    private float ap(){
+        return (float) config.getConfig().getDouble("melee-ap");
     }
 
 
@@ -172,7 +187,17 @@ public class ItemBuilder {
         int triggerCooldown = triggerCooldown();
         if (triggerCooldown != -1)
             container.set(plugin.triggerCooldown,PersistentDataType.INTEGER,triggerCooldown);
-
+        float playerBonus = playerBonus();
+        if (playerBonus != 0)
+            container.set(plugin.playerBonus,PersistentDataType.FLOAT,playerBonus);
+        float mobBonus = mobBonus();
+        if (mobBonus != 0)
+            container.set(plugin.mobBonus,PersistentDataType.FLOAT,mobBonus);
+        if (rangeMelee())
+            container.set(plugin.rangedMelee,PersistentDataType.BOOLEAN,true);
+        float ap = ap();
+        if (ap != 1)
+            container.set(plugin.ignoreArmor,PersistentDataType.FLOAT,ap);
         return meta;
     }
 

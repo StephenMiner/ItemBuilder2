@@ -76,7 +76,9 @@ public class BulletTrace {
                     double subtractor = host.decayRate * decayBlocks;
                     damage -= subtractor;
                 }
+                hit.setMetadata("bullet-hit",plugin.bulletHit);
                 hit.setMetadata("gunap",new FixedMetadataValue(plugin,host.getIgnoreArmor()));
+                damage = checkDamageBonus(hit,damage);
                 hit.damage(damage, living);
                 if (!iframes) hit.setNoDamageTicks(0);
                 return hit;
@@ -95,6 +97,21 @@ public class BulletTrace {
             }
         }
         return null;
+    }
+
+    /**
+     *
+     * @param hit the hit entity
+     * @param dmg original damage to be dealt to entity
+     * @return dmg + (dmg * damage bonuses)
+     */
+    private double checkDamageBonus(Entity hit, double dmg){
+        if (hit instanceof Player){
+            return dmg + (dmg * host.playerBonus);
+        }else if (hit instanceof Mob){
+            return dmg + (dmg * host.mobBonus);
+        }
+        return dmg;
     }
 
     private LivingEntity checkEntityIntersection(Location position, BoundingBox bounds){

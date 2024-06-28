@@ -116,6 +116,15 @@ public class GunReader {
         return mat;
     }
 
+    public float readPlayerBonus(){
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        return container.getOrDefault(plugin.playerBonus,PersistentDataType.FLOAT,0f);
+    }
+    public float readMobBonus(){
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        return container.getOrDefault(plugin.mobBonus,PersistentDataType.FLOAT,0f);
+    }
+
     /**
      * To be called when it is confirmed that a gun needs powder ( readPowder() != null) )
      * @param powder the item to check

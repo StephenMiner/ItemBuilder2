@@ -11,6 +11,7 @@ import me.stephenminer.customitems.listeners.ShieldListener;
 import me.stephenminer.customitems.listeners.TwoHandedListener;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,33 +29,65 @@ import java.util.List;
  */
 
 public final class CustomItems extends JavaPlugin {
+    //Just the id for the item
     public NamespacedKey id;
+    //Defines the melee range for the item
     public NamespacedKey reach;
+    //Defines whether debuffs will be recieved for not having a free offhand while using the item
     public NamespacedKey twoHanded;
+    //Defines the damage multiplier received for using this weapon while on a mount
     public NamespacedKey mounted;
+    //Defines the amount of ticks this item can disable shields for upon a fully charged attack
     public NamespacedKey shieldbreaker;
+    //Defines whether this item is a gun or not (with its presence) and what kind of projectile pattern the gun will have
     public NamespacedKey gun;
+    //Defines the damage for gun projectiles
     public NamespacedKey gunDamage;
+    //Defines the item that can be used for ammo
     public NamespacedKey ammo;
+    //Defines the max range for this gun
     public NamespacedKey range;
+    //defines the max range before damage begins to decay for gun projectiles
     public NamespacedKey decay;
+    //defines the decay rate of damage for gun projectiles after hitting the decay range
     public NamespacedKey decayRate;
+    //defines how long it will take for the "ramrod" firing stage to complete
     public NamespacedKey ramTime;
+    //defines what item can be used as powder in the "load powder" firing stage
     public NamespacedKey powder;
+    //defines how many projectiles will be shot. Only applies to gun types with a SPREAD firing pattern
     public NamespacedKey projectiles;
+    //Defines the cooldown the gun will recieve when it is shot (in ticks)
     public NamespacedKey triggerCooldown;
+    //Not saved on items
     public NamespacedKey dummy;
+    //Makes an item unstackable
     public NamespacedKey unstackable;
+    //Not a value users can write
     public NamespacedKey material;
+    //Defines the cooldown the gun will recieve (in ticks) when it is equipped
     public NamespacedKey equipCooldown;
+    //
     public NamespacedKey gunIgnoreArmor;
+
+    public NamespacedKey ignoreArmor;
+    //Defines the damage bonus vs players
+    public NamespacedKey playerBonus;
+    //Defines the damage bonus vs mobs
+    public NamespacedKey mobBonus;
+    //Defines whether damage bonus attributes should apply to melee attacks done by guns or not (default = false)
+    public NamespacedKey rangedMelee;
     public ConfigFile Recipes;
     public ConfigFile Items;
+
+
+    public FixedMetadataValue bulletHit;
 
     @Override
     public void onEnable(){
         Recipes = new ConfigFile(this, "recipes");
         Items = new ConfigFile(this, "items");
+        bulletHit = new FixedMetadataValue(this, true);
 
         createAttributeKeys();
         registerCommands();
@@ -85,7 +118,9 @@ public final class CustomItems extends JavaPlugin {
         unstackable = new NamespacedKey(this, "nostack");
         equipCooldown = new NamespacedKey(this,"equipcd");
         gunIgnoreArmor = new NamespacedKey( this, "gunap");
-
+        mobBonus = new NamespacedKey(this,"mobbonus");
+        playerBonus = new NamespacedKey(this, "playerbonus");
+        ignoreArmor = new NamespacedKey(this,"ap");
 
     }
     @Override

@@ -69,14 +69,16 @@ public class GunListener implements Listener {
 
      */
 
-    @EventHandler
-    public void handleAP(EntityDamageByEntityEvent event){
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void handleDamageBonuses(EntityDamageByEntityEvent event){
         Entity hit = event.getEntity();
-        if (hit.hasMetadata("gunap")){
+        if (hit.hasMetadata("bullet-hit") && hit.hasMetadata("gunap")){
             float ap = hit.getMetadata("gunap").get(0).asFloat();
             hit.removeMetadata("gunap",plugin);
             event.setDamage(EntityDamageEvent.DamageModifier.ARMOR,event.getDamage(EntityDamageEvent.DamageModifier.ARMOR) * ap);
         }
+        hit.removeMetadata("bullet-hit",plugin);
+
     }
 
     @EventHandler

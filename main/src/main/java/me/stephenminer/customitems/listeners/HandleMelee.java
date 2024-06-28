@@ -4,13 +4,11 @@ import me.stephenminer.customitems.CustomItems;
 import me.stephenminer.customitems.reach.RayTrace;
 import me.stephenminer.customitems.reach.ReachAttackHandler;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.inventory.ItemStack;
@@ -34,10 +32,12 @@ public class HandleMelee implements Listener {
 
         if (event.getAnimationType() != PlayerAnimationType.ARM_SWING) return;
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+        if (!item.hasItemMeta()) return;
+        ItemMeta meta = item.getItemMeta();
         Player player = event.getPlayer();
 
-        if (!hasReach(item)) return;
-        int reach = reachTag(item);
+        if (!hasReach(meta)) return;
+        int reach = reachTag(meta);
         RayTrace ray = new RayTrace(player);
         RayTraceResult result = ray.rayTrace(reach, 0.1d);
         if (result == null) return;
@@ -66,12 +66,18 @@ public class HandleMelee implements Listener {
     @EventHandler
     public void onHit(EntityDamageByEntityEvent event){
         if (event.getDamager() instanceof Player player && event.getEntity() instanceof LivingEntity living){
+            if (living.hasMetadata("bullet-hit")) return;
             ItemStack item = player.getInventory().getItemInMainHand();
-            if (!hasReach(item)) return;
+            if (!item.hasItemMeta()) return;
+            ItemMeta meta = item.getItemMeta();
+            if (!hasReach(meta)) {
+                applyMultipliers(event, meta);
+                return;
+            }
             RayTrace trace = new RayTrace(player);
             RayTraceResult result = trace.rayTrace(3.5, 0.1);
             if (result != null){
-                double trueRange = reachTag(item);
+                double trueRange = reachTag(meta);
                 if (trueRange < 3.5){
                     result = trace.rayTrace(trueRange,0.1);
                     if (result == null){
@@ -80,13 +86,13 @@ public class HandleMelee implements Listener {
                     }
                 }
                 living.setMetadata(ReachAttackHandler.DATA_KEY(player.getUniqueId()),new FixedMetadataValue(plugin,(byte) (0)));
-                applyMultipliers(event,mountMultiplier(item));
+                applyMultipliers(event, meta);
              //   System.out.println("normal damage");
               //  System.out.println(event.getDamage());
                 return;
             }else{
                 living.removeMetadata(ReachAttackHandler.DATA_KEY(player.getUniqueId()),plugin);
-                applyMultipliers(event,mountMultiplier(item));
+                applyMultipliers(event, meta);
             //    System.out.println("reach damage");
             }
             /*
@@ -105,42 +111,86 @@ public class HandleMelee implements Listener {
 
 
     /**
-     *
+     * Will apply all damage modifiers
      * @param event with Player as damager
+     * @param meta ItemMeta to read multipliers from
      */
-    private void applyMultipliers(EntityDamageByEntityEvent event, double multiplier){
-        Player player = (Player) event.getDamager();
-        Entity vehicle = player.getVehicle();
-        if (vehicle instanceof LivingEntity && vehicle instanceof Vehicle) {
-            event.setDamage(event.getDamage() * multiplier);
-            System.out.println(event.getDamage());
+    private void applyMultipliers(EntityDamageByEntityEvent event, ItemMeta meta){
+        if (!applyBonus(meta))return;
+        Entity damager = event.getDamager();
+        Entity vehicle = damager.getVehicle();
+        Entity attacked = event.getEntity();
+        double damage = event.getDamage();
+        if (vehicle instanceof LivingEntity) {
+            damage *= mountMultiplier(meta);
         }
+        if (attacked instanceof Player)
+            damage += (damage * playerBonus(meta));
+        else if (attacked instanceof Mob)
+            damage += (damage * mobBonus(meta));
+        event.setDamage(damage);
+        applyArmorIgnore(event, meta);
+    }
 
+    /**
+     * Applies melee armor piercing values to melee EntityDamageByEntityEvent values
+     * @param event event to grab and set data from and to
+     * @param meta ItemMeta to read data from
+     */
+    private void applyArmorIgnore(EntityDamageByEntityEvent event, ItemMeta meta){
+        float ignoreArmor = ignoreArmor(meta);
+        if (ignoreArmor == 1) return;
+        double armor = event.getDamage(EntityDamageEvent.DamageModifier.ARMOR);
+        event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, armor * ignoreArmor);
     }
 
 
 
-    private boolean hasReach(ItemStack item){ return reachTag(item) != -1; }
+    private boolean hasReach(ItemMeta meta){ return reachTag(meta) != -1; }
     /**
      *
-     * @param item item to read the tag of
+     * @param meta itemmeta to read the tag from
      * @return -1 if item doesn't have reach in persistant data container, however long the reach is otherwise
      */
-    private int reachTag(ItemStack item){
-        if (item == null || !item.hasItemMeta() || !item.getItemMeta().getPersistentDataContainer().has(plugin.reach, PersistentDataType.INTEGER))
+    private int reachTag(ItemMeta meta){
+        if (meta == null || !meta.getPersistentDataContainer().has(plugin.reach, PersistentDataType.INTEGER))
             return -1;
-        ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.get(plugin.reach, PersistentDataType.INTEGER);
     }
 
+    private float playerBonus(ItemMeta meta){
+        if (meta == null) return 0;
+        else return meta.getPersistentDataContainer().getOrDefault(plugin.playerBonus,PersistentDataType.FLOAT,0f);
+    }
+    private float mobBonus(ItemMeta meta){
+        if (meta == null) return 0;
+        else return meta.getPersistentDataContainer().getOrDefault(plugin.mobBonus,PersistentDataType.FLOAT,0f);
+    }
 
 
-    private double mountMultiplier(ItemStack item){
-        if (item == null || !item.hasItemMeta() || !item.getItemMeta().getPersistentDataContainer().has(plugin.mounted, PersistentDataType.DOUBLE))
+
+    private double mountMultiplier(ItemMeta meta){
+        if (meta == null || !meta.getPersistentDataContainer().has(plugin.mounted, PersistentDataType.DOUBLE))
             return 1;
-        ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.get(plugin.mounted,PersistentDataType.DOUBLE);
+    }
+
+    private boolean isGun(ItemMeta meta){
+        return meta.getPersistentDataContainer().has(plugin.gun, PersistentDataType.STRING);
+    }
+
+    private float ignoreArmor(ItemMeta meta) {
+        return meta.getPersistentDataContainer().getOrDefault(plugin.ignoreArmor,PersistentDataType.FLOAT,1f);
+    }
+
+    /**
+     * Defines whether damage bonuses (mount multiplier, dmg v player dmg v mobs, armor-piercing) should be applied or not
+     * @param meta the ItemMeta to read data from
+     * @return true if the item isnt a gun or if the item is a gun and has the rangedmelee tag
+     */
+    private boolean applyBonus(ItemMeta meta){
+        return !isGun(meta) || meta.getPersistentDataContainer().has(plugin.rangedMelee,PersistentDataType.BOOLEAN);
     }
 }
