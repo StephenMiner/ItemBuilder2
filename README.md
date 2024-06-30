@@ -29,8 +29,17 @@ reach: 9
 two-handed: true
 display-name: '&6Display Name'
 custom-model-data: 22314
+##Damage multiplier applied when the attacker is riding a mount
 mount-multiplier: 9
 shield-breaker-ticks: 40
+##Defines a damage bonus when players are struck by this weapon. formula is damage + (damage*multiplier)
+##If weapon is a gun, unless item has a 'ranged-melee: true' on file, then bonus is only applied to the gun's ranged attacks
+player-bonus: 0.25
+##Defines a damage bonus when mobs are struck by this weapon. formula is damage + (damage*multiplier)
+##If weapon is a gun, unless item has a 'ranged-melee: true' on file, then bonus is only applied to the gun's ranged attacks
+mob-bonus: 9
+##Defines how much armor damage absorption should be reduced by as a %, a value from 0.0-1.0 with 0.0 representing full armor piercing.
+ap: 0.5
 attributes:
   GENERIC_MAX_HEALTH:
     amount: 234.0
@@ -95,8 +104,11 @@ trigger-cooldown: 100
 ##Only applicable for gun-type: spread
 ##Defines how much projectiles will be shot in a singular use (ammo costs still remain at 1)
 projectiles: 6
-##Defines how much damage as a % should be affected by armor, a value from 0.0-1.0 with 0.0 representing full armor piercing.
+##Defines how much armor damage absorption should be reduced by as a %, a value from 0.0-1.0 with 0.0 representing full armor piercing.
 gunap: 1
+##This number defines the spread for SPREAD-type guns. 
+##Think of this number of the radius of the cone-of-fire that your gun will shoot in terms of blocks
+gun-spread: 0.5
 ```
 You do not have to define decay-ranges or decay-rates.
 You don't need to define ammo or powder or ram-time, but without them the gun will be able to fire without anything or without whatever you didn't include.
