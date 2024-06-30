@@ -247,8 +247,13 @@ public class GunListener implements Listener {
         double decayRange = Math.min(0, reader.readDecayRange());
         GunFire gunFire;
         if (type == GunBuilder.GunType.LINE) gunFire = new GunFire(player,reader.readDamage(),reader.readRange(), decayRate,decayRange);
-        else gunFire = new SpreadGunFire(player,reader.readDamage(),reader.readRange(),reader.readDecayRate(),reader.readDecayRange(),reader.readProjectiles());
+        else {
+            gunFire = new SpreadGunFire(player,reader.readDamage(),reader.readRange(),reader.readDecayRate(),reader.readDecayRange(),reader.readProjectiles());
+            ((SpreadGunFire) gunFire).setSpread(reader.readSpread());
+        }
         gunFire.setIgnoreArmor(reader.readIgnoreArmor());
+        gunFire.setMobBonus(reader.readMobBonus());
+        gunFire.setPlayerBonus(reader.readPlayerBonus());
         gunFire.shoot();
         reader.updateDurability(true);
         player.setCooldown(reader.readOGMaterial(),reader.readCooldown());

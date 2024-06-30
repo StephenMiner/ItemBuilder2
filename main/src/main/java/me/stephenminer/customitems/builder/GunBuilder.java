@@ -79,6 +79,11 @@ public class GunBuilder {
         else return (float) Math.min(1,file.getConfig().getDouble("gunap"));
     }
 
+    private double gunSpread(){
+        if (!file.getConfig().contains("gun-spread")) return 0.25;
+        else return Math.abs(file.getConfig().getDouble("gun-spread"));
+    }
+
 
     /**
      *
@@ -93,6 +98,9 @@ public class GunBuilder {
         if (gunType.equals("spread")){
             int projectiles = loadProjectiles();
             container.set(plugin.projectiles,PersistentDataType.INTEGER,projectiles);
+            double spread = gunSpread();
+            if (spread != 0.25)
+                container.set(plugin.gunSpread, PersistentDataType.DOUBLE, spread);
         }
 
         double dmg = loadDamage();

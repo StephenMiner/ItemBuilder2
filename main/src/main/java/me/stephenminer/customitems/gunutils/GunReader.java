@@ -116,6 +116,11 @@ public class GunReader {
         return mat;
     }
 
+    public double readSpread(){
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        return container.getOrDefault(plugin.gunSpread,PersistentDataType.DOUBLE,0.25);
+    }
+
     public float readPlayerBonus(){
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.getOrDefault(plugin.playerBonus,PersistentDataType.FLOAT,0f);

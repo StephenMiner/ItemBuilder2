@@ -15,13 +15,16 @@ import java.util.Set;
 
 public class SpreadGunFire extends GunFire{
     private int projectiles;
+    private double spread;
     public SpreadGunFire(LivingEntity shooter, double damage, double range, double decayRate, double decayRange, int projectiles, Set<EntityType> blacklist) {
         super(shooter, damage, range, decayRate, decayRange, blacklist);
         this.projectiles = projectiles;
+        spread = 0.25;
     }
     public SpreadGunFire(LivingEntity shooter, double damage, double range, double decayRate, double decayRange, int projectiles) {
         super(shooter, damage, range, decayRate, decayRange);
         this.projectiles = projectiles;
+        spread = 0.25;
     }
 
 
@@ -35,8 +38,8 @@ public class SpreadGunFire extends GunFire{
         List<LivingEntity> hits = new ArrayList<>();
         for (int i = 0; i < projectiles; i++){
             Vector dir = baseDir.clone()
-                    .add(new Vector(random.nextDouble()*0.25, random.nextDouble()*0.25, random.nextDouble()*0.25))
-                    .subtract(new Vector(random.nextDouble() *0.25, random.nextDouble()*0.25, random.nextDouble() * 0.25))
+                    .add(new Vector(random.nextDouble()*spread, random.nextDouble()*spread, random.nextDouble()*spread))
+                    .subtract(new Vector(random.nextDouble() *spread, random.nextDouble()*spread, random.nextDouble() * spread))
                     .normalize();
             BulletTrace trace = new BulletTrace(shooter,origin,dir,this,false, blacklist);
             LivingEntity traced = trace.trace();
@@ -49,4 +52,7 @@ public class SpreadGunFire extends GunFire{
         if (hit && shooter instanceof Player player)
             player.playSound(shooter, Sound.ENTITY_ARROW_HIT_PLAYER,1,1);
     }
+
+    public void setSpread(double spread){ this.spread = spread; }
+    public double getSpread(){ return spread; }
 }

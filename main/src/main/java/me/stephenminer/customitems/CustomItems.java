@@ -11,7 +11,10 @@ import me.stephenminer.customitems.listeners.ShieldListener;
 import me.stephenminer.customitems.listeners.TwoHandedListener;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -77,6 +80,8 @@ public final class CustomItems extends JavaPlugin {
     public NamespacedKey mobBonus;
     //Defines whether damage bonus attributes should apply to melee attacks done by guns or not (default = false)
     public NamespacedKey rangedMelee;
+    //Defines how wide the arc of spread should be. Only for guns of type Spread
+    public NamespacedKey gunSpread;
     public ConfigFile Recipes;
     public ConfigFile Items;
 
@@ -121,6 +126,7 @@ public final class CustomItems extends JavaPlugin {
         mobBonus = new NamespacedKey(this,"mobbonus");
         playerBonus = new NamespacedKey(this, "playerbonus");
         ignoreArmor = new NamespacedKey(this,"ap");
+        gunSpread = new NamespacedKey(this, "gunspread");
 
     }
     @Override
@@ -176,5 +182,12 @@ public final class CustomItems extends JavaPlugin {
             if (temp.contains(match)) filtered.add(entry);
         }
         return filtered;
+    }
+
+    public boolean hasID(ItemMeta meta, String id){
+        if (meta == null) return false;
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        String savedId = container.getOrDefault(this.id, PersistentDataType.STRING, "");
+        return savedId.equalsIgnoreCase(id);
     }
 }
