@@ -9,3 +9,5 @@ commands:
   createitem:
     usage: /createItem [id] [material]
     permission: "itembuilder.commands.create"
+  forceitems:
+    usage: /forceitems

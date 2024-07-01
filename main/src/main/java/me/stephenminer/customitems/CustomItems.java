@@ -1,14 +1,8 @@
 package me.stephenminer.customitems;
 
 import me.stephenminer.customitems.builder.RecipeBuilder;
-import me.stephenminer.customitems.commands.AutoComplete;
-import me.stephenminer.customitems.commands.CreateItem;
-import me.stephenminer.customitems.commands.CreateItemCompleter;
-import me.stephenminer.customitems.commands.ItemBuilderCmds;
-import me.stephenminer.customitems.listeners.GunListener;
-import me.stephenminer.customitems.listeners.HandleMelee;
-import me.stephenminer.customitems.listeners.ShieldListener;
-import me.stephenminer.customitems.listeners.TwoHandedListener;
+import me.stephenminer.customitems.commands.*;
+import me.stephenminer.customitems.listeners.*;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -82,6 +76,8 @@ public final class CustomItems extends JavaPlugin {
     public NamespacedKey rangedMelee;
     //Defines how wide the arc of spread should be. Only for guns of type Spread
     public NamespacedKey gunSpread;
+    //Defines whether the item can be placed or not. Only applicable if the item is a block.
+    public NamespacedKey placeable;
     public ConfigFile Recipes;
     public ConfigFile Items;
 
@@ -127,7 +123,7 @@ public final class CustomItems extends JavaPlugin {
         playerBonus = new NamespacedKey(this, "playerbonus");
         ignoreArmor = new NamespacedKey(this,"ap");
         gunSpread = new NamespacedKey(this, "gunspread");
-
+        placeable = new NamespacedKey(this,"placeable");
     }
     @Override
     public void onDisable(){
@@ -139,6 +135,7 @@ public final class CustomItems extends JavaPlugin {
         getCommand("itembuilder").setTabCompleter(new AutoComplete(this));
         getCommand("createitem").setExecutor(new CreateItem(this));
         getCommand("createitem").setTabCompleter(new CreateItemCompleter());
+        getCommand("forceitems").setExecutor(new ForceItems());
 
     }
     private void registerEvents(){
@@ -148,6 +145,7 @@ public final class CustomItems extends JavaPlugin {
         pm.registerEvents(new TwoHandedListener(),this);
         pm.registerEvents(new ShieldListener(), this);
         pm.registerEvents(new GunListener(),this);
+        pm.registerEvents(new ItemListener(),this);
     }
     private void addRecipes(){
         new BukkitRunnable(){

@@ -158,6 +158,7 @@ public class ItemBuilder {
     private boolean rangeMelee(){
         return config.getConfig().getBoolean("range-melee");
     }
+    private boolean placeable(){ return config.getConfig().getBoolean("placeable"); }
 
     private float ap(){
         return (float) config.getConfig().getDouble("melee-ap");
@@ -198,6 +199,8 @@ public class ItemBuilder {
         float ap = ap();
         if (ap != 1)
             container.set(plugin.ignoreArmor,PersistentDataType.FLOAT,ap);
+        boolean placeable = placeable();
+        if (!placeable) container.set(plugin.placeable,PersistentDataType.BOOLEAN,false);
         return meta;
     }
 
