@@ -2,13 +2,9 @@ package me.stephenminer.customitems.reach;
 
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.util.BoundingBox;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
-
-import java.util.Collection;
 
 public class RayTrace {
     private Player player;

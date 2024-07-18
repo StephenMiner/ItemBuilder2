@@ -31,6 +31,7 @@ display-name: '&6Display Name'
 custom-model-data: 22314
 ##Damage multiplier applied when the attacker is riding a mount
 mount-multiplier: 9
+##If you want the weapon to disable shields, this defines how many ticks it will disabled for
 shield-breaker-ticks: 40
 ##Defines a damage bonus when players are struck by this weapon. formula is damage + (damage*multiplier)
 ##If weapon is a gun, unless item has a 'ranged-melee: true' on file, then bonus is only applied to the gun's ranged attacks

@@ -164,6 +164,9 @@ public class ItemBuilder {
         return (float) config.getConfig().getDouble("melee-ap");
     }
 
+    public short maxUses(){ return (short) config.getConfig().getInt("max-durability"); }
+
+
 
     private ItemMeta addCustomTags(ItemMeta meta){
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -201,6 +204,12 @@ public class ItemBuilder {
             container.set(plugin.ignoreArmor,PersistentDataType.FLOAT,ap);
         boolean placeable = placeable();
         if (!placeable) container.set(plugin.placeable,PersistentDataType.BOOLEAN,false);
+
+        short maxUses = maxUses();
+        if (maxUses > 0) {
+            container.set(plugin.maxUses,PersistentDataType.SHORT,maxUses);
+            container.set(plugin.durability,PersistentDataType.SHORT,maxUses);
+        }
         return meta;
     }
 
@@ -211,7 +220,11 @@ public class ItemBuilder {
         if (hasCustomModelData())
             meta.setCustomModelData(getCustomModelData());
         meta.setDisplayName(getDisplayName());
-        if (!getLore().isEmpty())
+        List<String> lore = getLore();
+        if (lore.isEmpty() && maxUses() > 0) lore = new ArrayList<>();
+        if (maxUses() > 0)
+            lore.add(ChatColor.GRAY + "Uses: " + maxUses());
+        if (!lore.isEmpty())
             meta.setLore(getLore());
         Map<Enchantment, Integer> map = getEnchantments();
         if (map != null && !map.isEmpty())

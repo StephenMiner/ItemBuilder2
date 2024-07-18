@@ -48,7 +48,7 @@ public class SpreadGunFire extends GunFire{
                 hits.add(traced);
             }
         }
-        hits.forEach(living->living.setNoDamageTicks(2));
+        hits.forEach(living->living.setNoDamageTicks(10));
         if (hit && shooter instanceof Player player)
             player.playSound(shooter, Sound.ENTITY_ARROW_HIT_PLAYER,1,1);
     }

@@ -78,6 +78,14 @@ public final class CustomItems extends JavaPlugin {
     public NamespacedKey gunSpread;
     //Defines whether the item can be placed or not. Only applicable if the item is a block.
     public NamespacedKey placeable;
+    //Defines a custom durability for an item
+    //Stored as a short, max = 32k
+    public NamespacedKey durability;
+    //Defines a custom max durability for an item (does not support anvil repairing or mending)
+    //Stored as a short, max = 32k
+    public NamespacedKey maxUses;
+
+
     public ConfigFile Recipes;
     public ConfigFile Items;
 
@@ -124,6 +132,9 @@ public final class CustomItems extends JavaPlugin {
         ignoreArmor = new NamespacedKey(this,"ap");
         gunSpread = new NamespacedKey(this, "gunspread");
         placeable = new NamespacedKey(this,"placeable");
+        rangedMelee = new NamespacedKey(this,"rangemelee");
+        durability = new NamespacedKey( this, "use");
+        maxUses = new NamespacedKey(this,"maxuse");
     }
     @Override
     public void onDisable(){
