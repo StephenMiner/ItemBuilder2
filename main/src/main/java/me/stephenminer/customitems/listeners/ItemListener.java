@@ -59,9 +59,8 @@ public class ItemListener implements Listener {
         if (maxUses == -1) return;
         if (!shouldDamage(event,mat, meta, false)) return;
         ItemReader reader = new ItemReader(item, meta);
-        short durability = (short) (customDurability(meta) - 1);
         reader.updateMinecraftDamage();
-        tryBreakItem(player,item,durability);
+        reader.tryBreakItem(player);
     }
 
     @EventHandler (priority = EventPriority.HIGHEST)
@@ -75,9 +74,8 @@ public class ItemListener implements Listener {
                 if (max == -1) continue;
                 if (!shouldDamage(event, item.getType(),meta, true)) return;
                 ItemReader reader = new ItemReader(item,meta);
-                calculateArmorDamge(event.getDamage(),meta);
-                reader.updateMinecraftDamage();
-                tryBreakItem(player, item, reader.durability());
+                reader.calculateArmorDmg(event.getDamage(),meta);
+                reader.tryBreakItem(player);
             }
         }
     }
@@ -93,10 +91,8 @@ public class ItemListener implements Listener {
             if (maxUses == -1) return;
             if (!shouldDamage(event, mat, meta, false)) return;
             ItemReader reader = new ItemReader(hand, meta);
-            short newVal = (short) Math.max(0,reader.durability() - 1);
-            updateDurability(meta,newVal);
-            reader.updateMinecraftDamage();
-            tryBreakItem(player,hand, newVal);
+            reader.calculateDmg(meta);
+            reader.tryBreakItem(player);
         }
     }
 
@@ -109,28 +105,15 @@ public class ItemListener implements Listener {
             short max = maxUses(meta);
             if (max == -1) return;
             ItemReader reader = new ItemReader(bow, meta);
-            short newVal = (short) Math.max(0,reader.durability()-1);
-            updateDurability(meta, newVal);
-            reader.updateMinecraftDamage();
-            tryBreakItem(player,bow, newVal);
+            reader.calculateDmg(meta);
+            reader.tryBreakItem(player);
         }
     }
 
-    private void calculateArmorDamge(double dmg, ItemMeta meta){
-        short durabilityUsage = (short) Math.max((int) (dmg/4),1);
-        short newVal = (short) Math.max(0,customDurability(meta) - durabilityUsage);
-        updateDurability(meta, newVal);
-    }
 
 
-    private void tryBreakItem(Player player, ItemStack item, short durability){
-        if (durability > 0) return;
-        item.setAmount(0);
-        World world = player.getWorld();
-        Location loc = player.getEyeLocation();
-        world.spawnParticle(Particle.ITEM_CRACK,loc,1, item);
-        world.playSound(loc, Sound.ENTITY_ITEM_BREAK,1,1);
-    }
+
+
 
     private boolean canPlace(ItemMeta meta){
         return meta.getPersistentDataContainer().getOrDefault(plugin.placeable, PersistentDataType.BOOLEAN,true);
@@ -144,15 +127,7 @@ public class ItemListener implements Listener {
         return meta.getPersistentDataContainer().getOrDefault(plugin.durability,PersistentDataType.SHORT,(short) -1);
     }
 
-    /**
-     *
-     * @param meta itemmeta to write value to (make sure to update original item)
-     * @param newVal value to write, function will not write value if newVal < 0. If newVal is more than max durability, it will write the max value
-     */
-    private void updateDurability(ItemMeta meta, short newVal){
-        if (newVal < 0) return;
-        meta.getPersistentDataContainer().set(plugin.durability,PersistentDataType.SHORT,(short) Math.min(newVal, maxUses(meta)));
-    }
+
     /**
      * @param event
      * @param type the material of the item

@@ -225,7 +225,7 @@ public class ItemBuilder {
         if (maxUses() > 0)
             lore.add(ChatColor.GRAY + "Uses: " + maxUses());
         if (!lore.isEmpty())
-            meta.setLore(getLore());
+            meta.setLore(lore);
         Map<Enchantment, Integer> map = getEnchantments();
         if (map != null && !map.isEmpty())
             for (Enchantment entry : map.keySet()) {
