@@ -40,9 +40,11 @@ public class ItemReader {
      * Sets the host's itemmeta
      */
     public void updateMinecraftDamage(){
-        if (meta instanceof Damageable damageable){
-            float ratio = 1 - (((float) durability()) / maxDurability());
-            int dmg = (int) Math.max(host.getType().getMaxDurability() * ratio, 1);
+        if (meta instanceof Damageable damageable) {
+            float ratio = ((float) durability()) / maxDurability();
+            short max = host.getType().getMaxDurability();
+            int dmg = max - (short) (max * ratio);
+            if (dmg >= max) dmg = max - 1;
             damageable.setDamage(dmg);
             host.setItemMeta(meta);
         }

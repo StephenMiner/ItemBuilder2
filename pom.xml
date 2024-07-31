@@ -11,6 +11,7 @@
         <module>main</module>
         <module>v1_20_R2</module>
         <module>v1_20_R3</module>
+        <module>v1_21_R1</module>
 
         <module>dist</module>
     </modules>
@@ -51,6 +52,7 @@
                 <module>main</module>
                 <module>v1_20_R2</module>
                 <module>v1_20_R3</module>
+                <module>v1_21_R1</module>
                 <module>dist</module>
             </modules>
         </profile>
