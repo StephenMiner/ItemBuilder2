@@ -4,6 +4,7 @@ import me.stephenminer.customitems.CustomItems;
 import me.stephenminer.customitems.reach.RayTrace;
 import me.stephenminer.customitems.reach.ReachAttackHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -54,8 +55,17 @@ public class HandleMelee implements Listener {
 
     private ReachAttackHandler reflectClass(Player player){
         ReachAttackHandler out;
+        String packageName = "me.stephenminer";
+        String ver = Bukkit.getServer().getBukkitVersion();
+        ver = ver.substring(0, ver.indexOf("-"));
+        try {
+            if (ver.equals("1.21"))
+                return (ReachAttackHandler) Class.forName(packageName + ".v1_21_R1.ReachAttackHandlerImpl").getConstructor(Player.class).newInstance(player);
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         try{
-            String packageName = "me.stephenminer";
             String name = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
             out = (ReachAttackHandler) Class.forName(packageName +"." +  name + ".ReachAttackHandlerImpl").getConstructor(Player.class).newInstance(player);
             return out;
