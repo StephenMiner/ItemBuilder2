@@ -3,6 +3,7 @@ package me.stephenminer.customitems.builder;
 import me.stephenminer.customitems.CustomItems;
 import me.stephenminer.customitems.ItemConfig;
 import me.stephenminer.customitems.listeners.HandleMelee;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -10,6 +11,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.bukkit.packs.DataPack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -238,6 +241,9 @@ public class ItemBuilder {
 
         GunBuilder gunBuilder = new GunBuilder(id, config);
         meta = gunBuilder.buildGunAttributes(mat, meta);
+        TrimBuilder builder = new TrimBuilder(meta,config);
+        if (builder.validMeta())
+            builder.applyTrim();
         item.setItemMeta(meta);
         BuildAttribute ba = new BuildAttribute(plugin, config);
         ItemStack newItem = ba.addAttributes(item);
