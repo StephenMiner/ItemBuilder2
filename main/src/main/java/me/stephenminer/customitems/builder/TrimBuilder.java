@@ -2,11 +2,16 @@ package me.stephenminer.customitems.builder;
 
 import me.stephenminer.customitems.CustomItems;
 import me.stephenminer.customitems.ItemConfig;
+import org.bukkit.Bukkit;
+import org.bukkit.FeatureFlag;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.inventory.meta.ArmorMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.bukkit.packs.DataPack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -39,6 +44,7 @@ public class TrimBuilder {
     public void applyTrim(){
         ArmorTrim trim = loadTrim();
         if (trim == null) return;
+
         ((ArmorMeta) meta).setTrim(trim);
     }
 
@@ -73,8 +79,21 @@ public class TrimBuilder {
             case "silence" -> TrimPattern.SILENCE;
             case "raiser" -> TrimPattern.RAISER;
             case "host" -> TrimPattern.HOST;
-            default -> TrimPattern.SENTRY;
+            default -> customPattern(key);
         };
+    }
+
+    /**
+     * Attempt to get a custom TrimPattern from the minecraft registry
+     * @param nameString the namespace key for the trim "namespace:key"
+     * @return a TrimPattern if one corresponds to the given String, null otherwise
+     */
+    private TrimPattern customPattern(String nameString){
+        NamespacedKey key = NamespacedKey.fromString(nameString);
+        if (key == null) return null;
+        Registry<TrimPattern> patternReg = Bukkit.getRegistry(TrimPattern.class);
+        if (patternReg == null) return null;
+        return patternReg.get(key);
     }
 
 
@@ -98,5 +117,18 @@ public class TrimBuilder {
             case "amethyst" -> TrimMaterial.AMETHYST;
             default -> TrimMaterial.AMETHYST;
         };
+    }
+
+    /**
+     * Attempt to get a custom TrimMaterial from the bukkit registry
+     * @param nameString the namespace key for the trim material "namespace:key"
+     * @return a TrimMaterial if one corresponds to the given String, null otherwise
+     */
+    private TrimMaterial customMaterial(String nameString){
+        NamespacedKey key = NamespacedKey.fromString(nameString);
+        if (key == null) return null;
+        Registry<TrimMaterial> patternReg = Bukkit.getRegistry(TrimMaterial.class);
+        if (patternReg == null) return null;
+        return patternReg.get(key);
     }
 }
