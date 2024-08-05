@@ -115,7 +115,7 @@ public class TrimBuilder {
             case "emerald" -> TrimMaterial.EMERALD;
             case "lapis" -> TrimMaterial.LAPIS;
             case "amethyst" -> TrimMaterial.AMETHYST;
-            default -> TrimMaterial.AMETHYST;
+            default -> customMaterial(key);
         };
     }
 
