@@ -251,6 +251,7 @@ public class GunListener implements Listener {
             gunFire = new SpreadGunFire(player,reader.readDamage(),reader.readRange(),reader.readDecayRate(),reader.readDecayRange(),reader.readProjectiles());
             ((SpreadGunFire) gunFire).setSpread(reader.readSpread());
         }
+        gunFire.setWaterDecayRate(reader.waterDecay());
         gunFire.setIgnoreArmor(reader.readIgnoreArmor());
         gunFire.setMobBonus(reader.readMobBonus());
         gunFire.setPlayerBonus(reader.readPlayerBonus());

@@ -23,6 +23,7 @@ import java.util.List;
  * 1.20/1.20.1
  * 1.20.2
  * 1.20.4
+ * 1.21
  */
 
 public final class CustomItems extends JavaPlugin {
@@ -84,6 +85,8 @@ public final class CustomItems extends JavaPlugin {
     //Defines a custom max durability for an item (does not support anvil repairing or mending)
     //Stored as a short, max = 32k
     public NamespacedKey maxUses;
+    //The damage decay rate for projectiles in water
+    public NamespacedKey waterDecay;
 
 
     public ConfigFile Recipes;
@@ -135,6 +138,7 @@ public final class CustomItems extends JavaPlugin {
         rangedMelee = new NamespacedKey(this,"rangemelee");
         durability = new NamespacedKey( this, "use");
         maxUses = new NamespacedKey(this,"maxuse");
+        waterDecay = new NamespacedKey(this,"waterdecay");
     }
     @Override
     public void onDisable(){

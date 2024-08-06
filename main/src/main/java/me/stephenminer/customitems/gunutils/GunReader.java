@@ -131,6 +131,15 @@ public class GunReader {
     }
 
     /**
+     *
+     * @return The water decay rate on the ItemMeta or the regular decay rate if a water decay rate doesn't exist
+     */
+    public double waterDecay(){
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        return container.getOrDefault(plugin.waterDecay,PersistentDataType.DOUBLE,readDecayRate());
+    }
+    
+    /**
      * To be called when it is confirmed that a gun needs powder ( readPowder() != null) )
      * @param powder the item to check
      * @return true if the powder item's persistent data container has an ID tag matching the readPowder() result, else false

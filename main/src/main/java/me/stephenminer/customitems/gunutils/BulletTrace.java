@@ -37,7 +37,7 @@ public class BulletTrace {
         this(living,origin,dir,gunfire,iframes, null);
     }
     public BulletTrace(LivingEntity living, Location origin, Vector dir, GunFire gunfire, boolean iframes, Set<EntityType> blacklist){
-        boxSize = 0.2;
+        boxSize = 0.24;
         this.plugin = JavaPlugin.getPlugin(CustomItems.class);
         this.living = living;
         this.origin = origin;
@@ -66,16 +66,20 @@ public class BulletTrace {
                 world.playSound(base, group.getBreakSound(),group.getVolume(),group.getPitch());
                 return null;
             }
+            double damage = host.damage();
+            if (base.getBlock().isLiquid() && host.waterDecayRate > 0){
+                int decayBlocks = Math.max(0, i - (int) host.decayRange);
+                double subtractor = host.decayRate * decayBlocks;
+                damage -= subtractor;
+            }else if (host.decayRange() > 0) {
+                int decayBlocks = Math.max(0, i - (int) host.decayRange);
+                double subtractor = host.decayRate * decayBlocks;
+                damage -= subtractor;
+            }
             LivingEntity hit = checkEntityIntersection(base, box);
             if (hit != null){
                 if (blacklist != null && blacklist.contains(hit.getType())) continue;
-                double damage = host.damage();
                 world.spawnParticle(Particle.BLOCK_CRACK,base, 20,Material.REDSTONE_BLOCK.createBlockData());
-                if (host.decayRange() > 0) {
-                    int decayBlocks = Math.max(0, i - (int) host.decayRange);
-                    double subtractor = host.decayRate * decayBlocks;
-                    damage -= subtractor;
-                }
                 hit.setMetadata("bullet-hit",plugin.bulletHit);
                 hit.setMetadata("gunap",new FixedMetadataValue(plugin,host.getIgnoreArmor()));
                 damage = checkDamageBonus(hit,damage);

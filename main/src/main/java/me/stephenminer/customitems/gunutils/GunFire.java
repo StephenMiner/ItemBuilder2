@@ -15,12 +15,15 @@ import java.util.Set;
 public class GunFire {
     protected final CustomItems plugin;
     protected LivingEntity shooter;
-    protected double damage, range, decayRange, decayRate;
+    protected double damage, range, decayRange, decayRate, waterDecayRate;
     protected final Set<EntityType> blacklist;
     //A modifier from 0-1.0 where 0 represents 0% damage ignored due to armor, and 1 representing 100%
     protected float ignoreArmor, playerBonus, mobBonus;
 
     public GunFire(LivingEntity shooter, double damage, double range, double decayRate, double decayRange, Set<EntityType> blacklist){
+        this(shooter,damage,range,decayRate,decayRange,decayRate,blacklist);
+    }
+    public GunFire(LivingEntity shooter, double damage, double range, double decayRate, double decayRange, double waterdecayRate, Set<EntityType> blacklist){
         this.plugin = JavaPlugin.getPlugin(CustomItems.class);
         this.shooter = shooter;
         this.damage = damage;
@@ -28,6 +31,7 @@ public class GunFire {
         this.decayRate = decayRate;
         this.decayRange = decayRange;
         this.blacklist = blacklist;
+        this.waterDecayRate = waterdecayRate;
         ignoreArmor = 1.0f;
     }
     public GunFire(LivingEntity shooter, double damage, double range, double decayRate, double decayRange){
@@ -58,6 +62,7 @@ public class GunFire {
     public double damage(){ return damage; }
     public double range(){ return range; }
     public double decayRange(){ return decayRange; }
+    public double waterDecayRate(){ return waterDecayRate; }
     public double decayRate(){ return decayRate; }
 
     /**
@@ -75,6 +80,8 @@ public class GunFire {
     public float getIgnoreArmor(){
         return ignoreArmor;
     }
+
+    public void setWaterDecayRate(double waterDecayRate){ this.waterDecayRate = waterDecayRate; }
 
     public void setMobBonus(float mobBonus){ this.mobBonus = mobBonus; }
     public void setPlayerBonus(float playerBonus) { this.playerBonus = playerBonus; }
