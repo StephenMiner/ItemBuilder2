@@ -142,7 +142,7 @@ public class ItemListener implements Listener {
         if (event instanceof EntityDamageEvent damage){
             if (armor) {
                 boolean valid = switch (damage.getCause()) {
-                    case FIRE, FIRE_TICK, LAVA, MAGIC, FALL, STARVATION, POISON, WITHER, DROWNING -> false;
+                    case FREEZE,FIRE, FIRE_TICK, LAVA, MAGIC, FALL, STARVATION, POISON, WITHER, DROWNING, HOT_FLOOR,SONIC_BOOM -> false;
                     default -> true;
                 };
                 if (valid) return true;
