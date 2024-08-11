@@ -15,7 +15,7 @@ import java.util.Set;
 public class GunFire {
     protected final CustomItems plugin;
     protected LivingEntity shooter;
-    protected double damage, range, decayRange, decayRate, waterDecayRate;
+    protected double damage, range, decayRange, decayRate, waterDecayRate, size;
     protected final Set<EntityType> blacklist;
     //A modifier from 0-1.0 where 0 represents 0% damage ignored due to armor, and 1 representing 100%
     protected float ignoreArmor, playerBonus, mobBonus;
@@ -47,7 +47,7 @@ public class GunFire {
     public void shoot(){
         Location origin = shooter.getEyeLocation();
         Vector dir = origin.getDirection();
-        BulletTrace trace = new BulletTrace(shooter, origin, dir,this, true, blacklist);
+        BulletTrace trace = new BulletTrace(shooter, origin, dir,this, true, blacklist,size);
         boolean hit = trace.trace() != null;
         if (hit && shooter instanceof Player player){
             player.playSound(shooter, Sound.ENTITY_ARROW_HIT_PLAYER,1,1);
@@ -64,7 +64,7 @@ public class GunFire {
     public double decayRange(){ return decayRange; }
     public double waterDecayRate(){ return waterDecayRate; }
     public double decayRate(){ return decayRate; }
-
+    public double size(){ return size; }
     /**
      *
      * @param ignoreArmor A float from 0-1.0 where 0 represents 0% damage ignored due to armor, and 1 representing 100%
@@ -89,4 +89,5 @@ public class GunFire {
     public float getPlayerBonus(){ return playerBonus; }
     public float getMobBonus(){ return mobBonus; }
 
+    public void setBoxSize(double size){ this.size = size;}
 }

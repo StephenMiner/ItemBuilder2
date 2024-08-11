@@ -41,7 +41,7 @@ public class SpreadGunFire extends GunFire{
                     .add(new Vector(random.nextDouble()*spread, random.nextDouble()*spread, random.nextDouble()*spread))
                     .subtract(new Vector(random.nextDouble() *spread, random.nextDouble()*spread, random.nextDouble() * spread))
                     .normalize();
-            BulletTrace trace = new BulletTrace(shooter,origin,dir,this,false, blacklist);
+            BulletTrace trace = new BulletTrace(shooter,origin,dir,this,false, blacklist,size);
             LivingEntity traced = trace.trace();
             if (traced != null) {
                 hit = true;

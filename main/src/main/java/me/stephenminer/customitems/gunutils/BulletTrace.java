@@ -37,7 +37,11 @@ public class BulletTrace {
         this(living,origin,dir,gunfire,iframes, null);
     }
     public BulletTrace(LivingEntity living, Location origin, Vector dir, GunFire gunfire, boolean iframes, Set<EntityType> blacklist){
-        boxSize = 0.24;
+        this(living,origin,dir,gunfire,iframes,blacklist,0.24d);
+    }
+
+    public BulletTrace(LivingEntity living, Location origin, Vector dir, GunFire gunfire, boolean iframes, Set<EntityType> blacklist, double boxSize){
+        this.boxSize = boxSize;
         this.plugin = JavaPlugin.getPlugin(CustomItems.class);
         this.living = living;
         this.origin = origin;
@@ -46,6 +50,7 @@ public class BulletTrace {
         this.iframes = iframes;
         this.blacklist = blacklist;
     }
+
 
 
     public LivingEntity trace(){
@@ -136,8 +141,5 @@ public class BulletTrace {
     }
 
 
-    public void setIgnoreArmor(float ignoreArmor){
-
-    }
 
 }

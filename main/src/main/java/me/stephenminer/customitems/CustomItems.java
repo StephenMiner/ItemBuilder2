@@ -87,6 +87,8 @@ public final class CustomItems extends JavaPlugin {
     public NamespacedKey maxUses;
     //The damage decay rate for projectiles in water
     public NamespacedKey waterDecay;
+    //the size of the bullet;
+    public NamespacedKey bulletSize;
 
 
     public ConfigFile Recipes;
@@ -139,6 +141,7 @@ public final class CustomItems extends JavaPlugin {
         durability = new NamespacedKey( this, "use");
         maxUses = new NamespacedKey(this,"maxuse");
         waterDecay = new NamespacedKey(this,"waterdecay");
+        bulletSize = new NamespacedKey(this,"bsize");
     }
     @Override
     public void onDisable(){

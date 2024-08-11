@@ -88,6 +88,10 @@ public class GunBuilder {
         if (!file.getConfig().contains("water-decay")) return -1d;
         else return file.getConfig().getDouble("water-decay");
     }
+    private double bulletSize(){
+        if (!file.getConfig().contains("bullet-size")) return -1d;
+        else return file.getConfig().getDouble("bullet-size");
+    }
 
 
     /**
@@ -139,6 +143,9 @@ public class GunBuilder {
         double waterDecay = waterDecay();
         if (waterDecay != -1)
             container.set(plugin.waterDecay,PersistentDataType.DOUBLE, waterDecay);
+        double bulletSize = bulletSize();
+        if (bulletSize != -1)
+            container.set(plugin.bulletSize,PersistentDataType.DOUBLE,bulletSize);
         GunReader reader = new GunReader(null, meta);
         String defaultStage = reader.getFiringStage();
         List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
