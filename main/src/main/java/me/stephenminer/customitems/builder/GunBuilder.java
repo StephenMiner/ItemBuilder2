@@ -93,6 +93,11 @@ public class GunBuilder {
         else return file.getConfig().getDouble("bullet-size");
     }
 
+    private int pierce(){
+        if (!file.getConfig().contains("pierce")) return -1;
+        else return file.getConfig().getInt("pierce");
+    }
+
 
     /**
      *
@@ -146,6 +151,9 @@ public class GunBuilder {
         double bulletSize = bulletSize();
         if (bulletSize != -1)
             container.set(plugin.bulletSize,PersistentDataType.DOUBLE,bulletSize);
+        int pierce = pierce();
+        if (pierce > 1)
+            container.set(plugin.pierce,PersistentDataType.INTEGER,pierce);
         GunReader reader = new GunReader(null, meta);
         String defaultStage = reader.getFiringStage();
         List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();

@@ -89,6 +89,8 @@ public final class CustomItems extends JavaPlugin {
     public NamespacedKey waterDecay;
     //the size of the bullet;
     public NamespacedKey bulletSize;
+    //the amount of entities a bullet can pierce
+    public NamespacedKey pierce;
 
 
     public ConfigFile Recipes;
@@ -142,6 +144,8 @@ public final class CustomItems extends JavaPlugin {
         maxUses = new NamespacedKey(this,"maxuse");
         waterDecay = new NamespacedKey(this,"waterdecay");
         bulletSize = new NamespacedKey(this,"bsize");
+        pierce = new NamespacedKey(this,"pierce");
+
     }
     @Override
     public void onDisable(){

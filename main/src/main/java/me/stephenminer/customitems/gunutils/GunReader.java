@@ -143,6 +143,11 @@ public class GunReader {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.getOrDefault(plugin.bulletSize,PersistentDataType.DOUBLE, 0.24);
     }
+
+    public int readPierce(){
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        return container.getOrDefault(plugin.pierce,PersistentDataType.INTEGER,1);
+    }
     
     /**
      * To be called when it is confirmed that a gun needs powder ( readPowder() != null) )

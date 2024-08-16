@@ -25,6 +25,7 @@ public class BulletTrace {
     private final boolean iframes;
     private final double boxSize;
     private final Set<EntityType> blacklist;
+    private int hitCount;
 
     /**
      *
@@ -49,6 +50,7 @@ public class BulletTrace {
         this.host = gunfire;
         this.iframes = iframes;
         this.blacklist = blacklist;
+        hitCount = 0;
     }
 
 
