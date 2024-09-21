@@ -91,6 +91,7 @@ public class BulletTrace {
                 hit.setMetadata("gunap",new FixedMetadataValue(plugin,host.getIgnoreArmor()));
                 damage = checkDamageBonus(hit,damage);
                 hit.damage(damage, living);
+                hitCount++;
                 if (!iframes) hit.setNoDamageTicks(0);
                 return hit;
             }
