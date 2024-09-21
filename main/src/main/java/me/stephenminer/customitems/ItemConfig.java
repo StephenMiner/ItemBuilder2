@@ -17,7 +17,7 @@ public class ItemConfig {
         this.file = file;
         try {
             parent = new File(this.plugin.getDataFolder(), "items");
-            if (!parent.exists()) parent.mkdir();
+            if (!parent.exists()) parent.mkdirs();
         }catch (Exception e){ e.printStackTrace(); }
         saveDefaultConfig();
     }

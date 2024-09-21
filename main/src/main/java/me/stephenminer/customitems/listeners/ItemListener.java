@@ -11,12 +11,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -110,6 +110,25 @@ public class ItemListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onEnchant(PrepareItemEnchantEvent event){
+        ItemStack item = event.getItem();
+        if (!item.hasItemMeta()) return;
+        ItemMeta meta = item.getItemMeta();
+        if (!canEnchant(meta)) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void anvilEnchant(PrepareAnvilEvent event){
+        ItemStack item = event.getInventory().getItem(0);
+        ItemStack addon = event.getInventory().getItem(1);
+        if (item == null || !item.hasItemMeta()) return;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null || addon == null || !addon.hasItemMeta()) return;
+        if (!canEnchant(meta) && ((addon.getType() == item.getType() && !addon.getEnchantments().isEmpty()) || addon.getType() == Material.ENCHANTED_BOOK))
+            event.setResult(null);
+    }
+
 
 
 
@@ -125,6 +144,10 @@ public class ItemListener implements Listener {
 
     private short maxUses(ItemMeta meta){
         return meta.getPersistentDataContainer().getOrDefault(plugin.durability,PersistentDataType.SHORT,(short) -1);
+    }
+
+    private boolean canEnchant(ItemMeta meta){
+        return meta.getPersistentDataContainer().getOrDefault(plugin.enchantable,PersistentDataType.BOOLEAN, true);
     }
 
 

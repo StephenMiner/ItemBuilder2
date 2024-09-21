@@ -169,6 +169,8 @@ public class ItemBuilder {
 
     public short maxUses(){ return (short) config.getConfig().getInt("max-durability"); }
 
+    public boolean canEnchant(){ return config.getConfig().getBoolean("enchantable"); }
+
 
 
     private ItemMeta addCustomTags(ItemMeta meta){
@@ -213,6 +215,9 @@ public class ItemBuilder {
             container.set(plugin.maxUses,PersistentDataType.SHORT,maxUses);
             container.set(plugin.durability,PersistentDataType.SHORT,maxUses);
         }
+        boolean enchantable = canEnchant();
+        if (!enchantable)
+            container.set(plugin.enchantable,PersistentDataType.BOOLEAN,false);
         return meta;
     }
 
