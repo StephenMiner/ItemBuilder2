@@ -90,4 +90,5 @@ public class GunFire {
     public float getMobBonus(){ return mobBonus; }
 
     public void setBoxSize(double size){ this.size = size;}
+
 }

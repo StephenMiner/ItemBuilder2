@@ -4,6 +4,7 @@ import me.stephenminer.customitems.CustomItems;
 import me.stephenminer.customitems.builder.ItemReader;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;

@@ -103,9 +103,7 @@ public class GunReader {
 
     public float readIgnoreArmor(){
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(plugin.gunIgnoreArmor,PersistentDataType.FLOAT))
-            return container.get(plugin.gunIgnoreArmor, PersistentDataType.FLOAT);
-        else return 1;
+        return container.getOrDefault(plugin.gunIgnoreArmor,PersistentDataType.FLOAT,1f);
     }
     public Material readOGMaterial(){
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -148,6 +146,7 @@ public class GunReader {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.getOrDefault(plugin.pierce,PersistentDataType.INTEGER,1);
     }
+
     
     /**
      * To be called when it is confirmed that a gun needs powder ( readPowder() != null) )

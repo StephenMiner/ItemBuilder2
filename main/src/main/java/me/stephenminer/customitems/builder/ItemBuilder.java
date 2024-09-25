@@ -164,7 +164,9 @@ public class ItemBuilder {
     private boolean placeable(){ return config.getConfig().getBoolean("placeable"); }
 
     private float ap(){
-        return (float) config.getConfig().getDouble("melee-ap");
+        if (config.getConfig().contains("melee-ap")) {
+            return (float) config.getConfig().getDouble("melee-ap");
+        }else return 1;
     }
 
     public short maxUses(){ return (short) config.getConfig().getInt("max-durability"); }
