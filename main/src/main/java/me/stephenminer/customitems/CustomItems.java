@@ -94,6 +94,7 @@ public final class CustomItems extends JavaPlugin {
     public NamespacedKey enchantable;
 
     public NamespacedKey slowRam;
+    public NamespacedKey gunOffhand;
 
 
     public ConfigFile Recipes;
@@ -150,6 +151,8 @@ public final class CustomItems extends JavaPlugin {
         pierce = new NamespacedKey(this,"pierce");
         enchantable = new NamespacedKey( this, "enchantable");
         slowRam = new NamespacedKey(this, "slowram");
+        gunOffhand = new NamespacedKey(this, "gunoffhand");
+
 
     }
     @Override

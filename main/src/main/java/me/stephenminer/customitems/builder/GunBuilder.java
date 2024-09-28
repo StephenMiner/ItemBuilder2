@@ -102,6 +102,11 @@ public class GunBuilder {
         return file.getConfig().getBoolean("slow-ram");
     }
 
+    private boolean gunOffhand(){
+        if (!file.getConfig().contains("gun-offhand")) return true;
+        return file.getConfig().getBoolean("gun-offhand");
+    }
+
 
     /**
      *
@@ -161,6 +166,9 @@ public class GunBuilder {
         boolean slowRam = slowRam();
         if (slowRam)
             container.set(plugin.slowRam,PersistentDataType.BOOLEAN, true);
+        boolean gunOffhand = gunOffhand();
+        if (!gunOffhand)
+            container.set(plugin.gunOffhand,PersistentDataType.BOOLEAN,false);
         GunReader reader = new GunReader(null, meta);
         String defaultStage = reader.getFiringStage();
         List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();

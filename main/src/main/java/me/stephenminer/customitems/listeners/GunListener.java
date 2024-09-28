@@ -138,6 +138,7 @@ public class GunListener implements Listener {
         if (meta instanceof CrossbowMeta crossbowMeta && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
             GunReader reader = new GunReader(bow, crossbowMeta);
             if (reader.getFiringStage().equals("ready to fire")) {
+                if (bow.equals(player.getInventory().getItemInOffHand()) && !reader.readGunOffhand()) return;
                 fire(player,reader);
             }
         }
@@ -257,6 +258,7 @@ public class GunListener implements Listener {
                 }
                 count--;
                 float ratio = (float) count / max;
+                if (ratio < 0) return;
                 Damageable damageable = (Damageable) reader.getItemMeta();
                 damageable.setDamage( (int) (reader.getHost().getType().getMaxDurability() * ratio));
                 reader.getHost().setItemMeta(damageable);

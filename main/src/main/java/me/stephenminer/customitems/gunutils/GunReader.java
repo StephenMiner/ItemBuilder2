@@ -133,6 +133,11 @@ public class GunReader {
         return container.getOrDefault(plugin.slowRam,PersistentDataType.BOOLEAN,false);
     }
 
+    public boolean readGunOffhand(){
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        return container.getOrDefault(plugin.gunOffhand,PersistentDataType.BOOLEAN,true);
+    }
+
     /**
      *
      * @return The water decay rate on the ItemMeta or the regular decay rate if a water decay rate doesn't exist
@@ -179,6 +184,7 @@ public class GunReader {
         return ammoId.equals(meta.getPersistentDataContainer().get(plugin.id, PersistentDataType.STRING));
 
     }
+
 
     /**
      * Updates the durability of the gun item so it acts as a progress bar if ramrodding option is enabled
