@@ -98,6 +98,10 @@ public class GunBuilder {
         else return file.getConfig().getInt("pierce");
     }
 
+    private boolean slowRam(){
+        return file.getConfig().getBoolean("slow-ram");
+    }
+
 
     /**
      *
@@ -154,6 +158,9 @@ public class GunBuilder {
         int pierce = pierce();
         if (pierce > 1)
             container.set(plugin.pierce,PersistentDataType.INTEGER,pierce);
+        boolean slowRam = slowRam();
+        if (slowRam)
+            container.set(plugin.slowRam,PersistentDataType.BOOLEAN, true);
         GunReader reader = new GunReader(null, meta);
         String defaultStage = reader.getFiringStage();
         List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();

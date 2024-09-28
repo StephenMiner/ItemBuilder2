@@ -28,6 +28,8 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
@@ -195,6 +197,10 @@ public class GunListener implements Listener {
                     this.cancel();
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR,new TextComponent("Ramming Stopped"));
                     ramming.remove(player.getUniqueId());
+                    if (reader.readSlowRam() && player.hasPotionEffect(PotionEffectType.SLOW)){
+                        PotionEffect effect = player.getPotionEffect(PotionEffectType.SLOW);
+                        if (effect.isAmbient() && effect.getAmplifier() == 0) player.removePotionEffect(PotionEffectType.SLOW);
+                    }
                     return;
                 }
                 if (dropped.contains(uuid)){
@@ -202,12 +208,20 @@ public class GunListener implements Listener {
                     this.cancel();
                     ramming.remove(player.getUniqueId());
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR,new TextComponent("Ramming Stopped"));
+                    if (reader.readSlowRam() && player.hasPotionEffect(PotionEffectType.SLOW)){
+                        PotionEffect effect = player.getPotionEffect(PotionEffectType.SLOW);
+                        if (effect.isAmbient() && effect.getAmplifier() == 0) player.removePotionEffect(PotionEffectType.SLOW);
+                    }
                     return;
                 }
                 if (slot != inv.getHeldItemSlot()){
                     this.cancel();
                     ramming.remove(player.getUniqueId());
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR,new TextComponent("Ramming Stopped"));
+                    if (reader.readSlowRam() && player.hasPotionEffect(PotionEffectType.SLOW)){
+                        PotionEffect effect = player.getPotionEffect(PotionEffectType.SLOW);
+                        if (effect.isAmbient() && effect.getAmplifier() == 0) player.removePotionEffect(PotionEffectType.SLOW);
+                    }
                     return;
                 }
                 ItemStack offhand = inv.getItemInOffHand();
@@ -215,6 +229,10 @@ public class GunListener implements Listener {
                     this.cancel();
                     ramming.remove(player.getUniqueId());
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR,new TextComponent("Ramming Stopped"));
+                    if (reader.readSlowRam() && player.hasPotionEffect(PotionEffectType.SLOW)){
+                        PotionEffect effect = player.getPotionEffect(PotionEffectType.SLOW);
+                        if (effect.isAmbient() && effect.getAmplifier() == 0) player.removePotionEffect(PotionEffectType.SLOW);
+                    }
                     return;
                 }
                 if (count % 20 == 0){
@@ -228,6 +246,14 @@ public class GunListener implements Listener {
                     reader.updateDurability();
                     if (!checkReadyFire(player,reader))
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Ramming Completed"));
+                    if (reader.readSlowRam() && player.hasPotionEffect(PotionEffectType.SLOW)){
+                        PotionEffect effect = player.getPotionEffect(PotionEffectType.SLOW);
+                        if (effect.isAmbient() && effect.getAmplifier() == 0) player.removePotionEffect(PotionEffectType.SLOW);
+                    }
+                }
+                if (reader.readSlowRam()) {
+                    if (!player.hasPotionEffect(PotionEffectType.SLOW))
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 25, 0, true, true, true));
                 }
                 count--;
                 float ratio = (float) count / max;

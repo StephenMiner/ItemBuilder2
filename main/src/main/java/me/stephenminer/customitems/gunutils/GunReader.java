@@ -128,6 +128,11 @@ public class GunReader {
         return container.getOrDefault(plugin.mobBonus,PersistentDataType.FLOAT,0f);
     }
 
+    public boolean readSlowRam(){
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        return container.getOrDefault(plugin.slowRam,PersistentDataType.BOOLEAN,false);
+    }
+
     /**
      *
      * @return The water decay rate on the ItemMeta or the regular decay rate if a water decay rate doesn't exist
