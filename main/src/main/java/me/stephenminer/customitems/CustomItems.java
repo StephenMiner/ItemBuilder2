@@ -166,6 +166,9 @@ public final class CustomItems extends JavaPlugin {
         getCommand("createitem").setExecutor(new CreateItem(this));
         getCommand("createitem").setTabCompleter(new CreateItemCompleter());
         getCommand("forceitems").setExecutor(new ForceItems());
+        ReloadItem reloadItem = new ReloadItem();
+        getCommand("reloaditem").setExecutor(reloadItem);
+        getCommand("reloaditem").setTabCompleter(reloadItem);
 
     }
     private void registerEvents(){

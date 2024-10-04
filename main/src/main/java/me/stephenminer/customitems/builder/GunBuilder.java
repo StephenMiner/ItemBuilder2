@@ -3,6 +3,7 @@ package me.stephenminer.customitems.builder;
 import me.stephenminer.customitems.CustomItems;
 import me.stephenminer.customitems.ItemConfig;
 import me.stephenminer.customitems.gunutils.GunReader;
+import me.stephenminer.customitems.gunutils.GunRecord;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.Damageable;
@@ -42,7 +43,9 @@ public class GunBuilder {
     }
 
     private int loadRamTime(){
-        return file.getConfig().getInt("ram-time");
+        if (file.getConfig().contains("ram-time"))
+            return file.getConfig().getInt("ram-time");
+        else return -1;
     }
     private double loadRange(){
         return file.getConfig().getInt("range");
@@ -107,13 +110,37 @@ public class GunBuilder {
         return file.getConfig().getBoolean("gun-offhand");
     }
 
+    private int triggerCooldown(){
+        if (!file.getConfig().contains("trigger-cooldown")) return -1;
+        else return file.getConfig().getInt("trigger-cooldown");
+    }
 
+
+    public void loadGunAttributes(String id){
+        GunRecord record = GunRecord.IDS.getOrDefault(id,new GunRecord(id));
+        record.setDamage(loadDamage());
+        record.setRange(loadRange());
+        record.setDecayRange(loadDecay());
+        record.setDecayRate(loadDecayRate());
+        record.setShot(loadAmmoId());
+        record.setPowder(loadPowderId());
+        record.setRamTime(loadRamTime());
+        record.setEquipCd(equipCooldown());
+        record.setCd(triggerCooldown());
+        record.setGunap(ignoreArmor());
+        record.setWaterDecay(waterDecay());
+        record.setBulletSize(bulletSize());
+        record.setPierce(pierce());
+        record.setSlowRam(slowRam());
+        record.setGunOffhand(gunOffhand());
+    }
     /**
      *
      * @param meta the ItemMeta to write to
      * @return ItemMeta with tags for gun if any are in the config
      */
     public ItemMeta buildGunAttributes(Material type, ItemMeta meta){
+        loadGunAttributes(id);
         if (!isGun()) return meta;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         String gunType = gunType();

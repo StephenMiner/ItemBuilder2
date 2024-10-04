@@ -21,6 +21,7 @@ public class GunReader {
     private final CustomItems plugin;
     private final ItemMeta meta;
     private final ItemStack host;
+    private String id;
 
 
     /**
@@ -32,6 +33,10 @@ public class GunReader {
         this.host = host;
         this.meta = meta;
         loadStages();
+    }
+
+    public String readId(){
+        return meta.getPersistentDataContainer().getOrDefault(plugin.id,PersistentDataType.STRING, "");
     }
 
 
@@ -47,63 +52,97 @@ public class GunReader {
         return null;
     }
     public String readPowder(){
-        return meta.getPersistentDataContainer().get(plugin.powder,PersistentDataType.STRING);
+        return GunRecord.IDS.get(id).powder();
     }
 
     public String readAmmo(){
-        return meta.getPersistentDataContainer().get(plugin.ammo, PersistentDataType.STRING);
+       // return meta.getPersistentDataContainer().get(plugin.ammo, PersistentDataType.STRING);
+        return GunRecord.IDS.get(id).shot();
     }
 
+    //-1 no present
     public double readDamage(){
+        return GunRecord.IDS.get(id).damage();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(plugin.gunDamage,PersistentDataType.DOUBLE))
             return container.get(plugin.gunDamage,PersistentDataType.DOUBLE);
         return -1;
+
+         */
     }
 
     public double readRange(){
+        return GunRecord.IDS.get(id).range();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(plugin.range,PersistentDataType.DOUBLE))
             return container.get(plugin.range, PersistentDataType.DOUBLE);
         return -1;
+
+         */
     }
 
     public double readDecayRange(){
+        return GunRecord.IDS.get(id).decayRange();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(plugin.decay,PersistentDataType.DOUBLE))
             return container.get(plugin.decay, PersistentDataType.DOUBLE);
         return -1;
+
+         */
     }
 
     public double readDecayRate(){
+        return GunRecord.IDS.get(id).decayRate();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(plugin.decayRate,PersistentDataType.DOUBLE))
             return container.get(plugin.decayRate, PersistentDataType.DOUBLE);
         return -1;
+
+         */
     }
 
     public int readRamTime(){
+        return GunRecord.IDS.get(id).ramTime();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(plugin.ramTime,PersistentDataType.INTEGER))
             return container.get(plugin.ramTime,PersistentDataType.INTEGER);
         else return -1;
+
+         */
     }
     public int readProjectiles(){
+        return GunRecord.IDS.get(id).projectiles();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(plugin.projectiles,PersistentDataType.INTEGER))
             return container.get(plugin.projectiles,PersistentDataType.INTEGER);
         else return -1;
+
+         */
     }
     public int readCooldown(){
+        return GunRecord.IDS.get(id).cd();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(plugin.triggerCooldown, PersistentDataType.INTEGER))
             return container.get(plugin.triggerCooldown,PersistentDataType.INTEGER);
         else return -1;
+
+         */
     }
 
     public float readIgnoreArmor(){
+        return GunRecord.IDS.get(id).gunap();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.getOrDefault(plugin.gunIgnoreArmor,PersistentDataType.FLOAT,1f);
+
+         */
     }
     public Material readOGMaterial(){
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -115,8 +154,12 @@ public class GunReader {
     }
 
     public double readSpread(){
+        return GunRecord.IDS.get(id).spread();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.getOrDefault(plugin.gunSpread,PersistentDataType.DOUBLE,0.25);
+
+         */
     }
 
     public float readPlayerBonus(){
@@ -129,13 +172,21 @@ public class GunReader {
     }
 
     public boolean readSlowRam(){
+        return GunRecord.IDS.get(id).slowRam();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.getOrDefault(plugin.slowRam,PersistentDataType.BOOLEAN,false);
+
+         */
     }
 
     public boolean readGunOffhand(){
+        return GunRecord.IDS.get(id).gunOffhand();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.getOrDefault(plugin.gunOffhand,PersistentDataType.BOOLEAN,true);
+
+         */
     }
 
     /**
@@ -143,18 +194,30 @@ public class GunReader {
      * @return The water decay rate on the ItemMeta or the regular decay rate if a water decay rate doesn't exist
      */
     public double waterDecay(){
+        return GunRecord.IDS.get(id).waterDecay();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.getOrDefault(plugin.waterDecay,PersistentDataType.DOUBLE,readDecayRate());
+
+         */
     }
 
     public double bulletSize(){
+        return GunRecord.IDS.get(id).bulletSize();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.getOrDefault(plugin.bulletSize,PersistentDataType.DOUBLE, 0.24);
+
+         */
     }
 
     public int readPierce(){
+        return GunRecord.IDS.get(id).pierce();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.getOrDefault(plugin.pierce,PersistentDataType.INTEGER,1);
+
+         */
     }
 
     
@@ -213,10 +276,14 @@ public class GunReader {
 
 
     public int equipCooldown(){
+        return GunRecord.IDS.get(id).equipCd();
+        /*
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(plugin.equipCooldown,PersistentDataType.INTEGER))
             return container.get(plugin.equipCooldown,PersistentDataType.INTEGER);
         else return -1;
+        99
+         */
     }
 
 

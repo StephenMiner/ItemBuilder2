@@ -11,3 +11,5 @@ commands:
     permission: "itembuilder.commands.create"
   forceitems:
     usage: /forceitems
+  reloaditem:
+    permission: "itembuilder.cmds.reload"
