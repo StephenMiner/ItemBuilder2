@@ -133,6 +133,8 @@ public class GunBuilder {
         record.setPierce(pierce());
         record.setSlowRam(slowRam());
         record.setGunOffhand(gunOffhand());
+        record.setProjectiles(loadProjectiles());
+        record.setSpread(gunSpread());
     }
     /**
      *
