@@ -1,7 +1,10 @@
 package me.stephenminer.customitems;
 
+import me.stephenminer.customitems.builder.GunBuilder;
+import me.stephenminer.customitems.builder.ItemBuilder;
 import me.stephenminer.customitems.builder.RecipeBuilder;
 import me.stephenminer.customitems.commands.*;
+import me.stephenminer.customitems.gunutils.GunRecord;
 import me.stephenminer.customitems.listeners.*;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -108,12 +111,37 @@ public final class CustomItems extends JavaPlugin {
         Recipes = new ConfigFile(this, "recipes");
         Items = new ConfigFile(this, "items");
         bulletHit = new FixedMetadataValue(this, true);
-
         createAttributeKeys();
         registerCommands();
         addRecipes();
         registerEvents();
+        createGunRecords();
+    }
 
+    private void createGunRecords(){
+        File parent = new File(this.getDataFolder().getPath(), "items");
+        if (!parent.exists()) parent.mkdir();
+        List<String> items = names();
+        for (String name : items){
+            ItemBuilder builder = new ItemBuilder(name);
+            if (builder.hasEntry() && builder.isGun()){
+                GunBuilder gunBuilder = new GunBuilder(name, builder.getConfig());
+                gunBuilder.loadGunAttributes(name);
+            }
+        }
+    }
+
+    private List<String> names() {
+        File parent = new File(this.getDataFolder().getPath(), "items");
+        if (!parent.exists()) parent.mkdir();
+        List<String> items = new ArrayList<>();
+        String[] fileNames = parent.list();
+        for (String name : fileNames){
+
+            if (!name.contains(".yml")) continue;
+            items.add(name.replace(".yml",""));
+        }
+        return items;
     }
 
 
@@ -169,6 +197,7 @@ public final class CustomItems extends JavaPlugin {
         ReloadItem reloadItem = new ReloadItem();
         getCommand("reloaditem").setExecutor(reloadItem);
         getCommand("reloaditem").setTabCompleter(reloadItem);
+        getCommand("updateitem").setExecutor(new UpdateItem());
 
     }
     private void registerEvents(){
