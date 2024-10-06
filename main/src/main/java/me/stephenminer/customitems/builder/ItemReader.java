@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -35,6 +36,12 @@ public class ItemReader {
         return meta.getPersistentDataContainer().getOrDefault(plugin.maxUses,PersistentDataType.SHORT,(short)-1);
     }
 
+    public void setDurability(short durability){
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        container.set(plugin.durability,PersistentDataType.SHORT, (short) Math.min(durability, maxDurability()));
+        updateMinecraftDamage();
+    }
+
     /**
      * Used to display the custom durability on the item's durability bar
      * Sets the host's itemmeta
@@ -49,6 +56,8 @@ public class ItemReader {
             host.setItemMeta(meta);
         }
     }
+
+
 
     public void calculateArmorDmg(double dmg, ItemMeta meta){
         short durabilityUsage = (short) Math.max((int) (dmg/4),1);
