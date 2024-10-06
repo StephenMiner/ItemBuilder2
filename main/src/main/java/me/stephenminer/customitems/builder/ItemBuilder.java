@@ -35,6 +35,10 @@ public class ItemBuilder {
 
     public boolean hasEntry(){ return config != null; }
 
+    public boolean isGun(){
+        return config.getConfig().contains("gun-type");
+    }
+
     private List<String> getStringList(String section) {
         if (!config.getConfig().contains(section))
             return null;
@@ -171,7 +175,10 @@ public class ItemBuilder {
 
     public short maxUses(){ return (short) config.getConfig().getInt("max-durability"); }
 
-    public boolean canEnchant(){ return config.getConfig().getBoolean("enchantable"); }
+    public boolean canEnchant(){
+        if (!config.getConfig().contains("enchantable")) return true;
+        return config.getConfig().getBoolean("enchantable");
+    }
 
 
 
@@ -247,7 +254,8 @@ public class ItemBuilder {
         meta = addCustomTags(meta);
 
         GunBuilder gunBuilder = new GunBuilder(id, config);
-        meta = gunBuilder.buildGunAttributes(mat, meta);
+        gunBuilder.loadGunAttributes(id);
+       // meta = gunBuilder.buildGunAttributes(mat, meta);
         TrimBuilder builder = new TrimBuilder(meta,config);
         if (builder.validMeta())
             builder.applyTrim();
