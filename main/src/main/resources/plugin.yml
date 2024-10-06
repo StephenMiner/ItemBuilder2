@@ -13,3 +13,4 @@ commands:
     usage: /forceitems
   reloaditem:
     permission: "itembuilder.cmds.reload"
+  updateitem:
