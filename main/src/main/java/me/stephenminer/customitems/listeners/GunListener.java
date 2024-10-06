@@ -429,9 +429,10 @@ public class GunListener implements Listener {
     }
 
     private void setCooldown(Player player, GunReader reader){
+        if (!isGun(reader.getItemMeta())) return;
         int equipCd = reader.equipCooldown();
         if (equipCd == -1) return;
-        if (reader.getFiringStage().equals("ready to fire")) return;
+        if (!reader.getFiringStage().equals("ready to fire")) return;
         else player.setCooldown(Material.CROSSBOW,reader.equipCooldown());
     }
 
