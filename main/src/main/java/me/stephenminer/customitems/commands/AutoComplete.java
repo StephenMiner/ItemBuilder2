@@ -119,6 +119,7 @@ public class AutoComplete implements TabCompleter {
         List<String> items = new ArrayList<>();
         String[] fileNames = parent.list();
         for (String name : fileNames){
+            if (!name.contains(".yml")) continue;
             items.add(name.replace(".yml",""));
         }
         return plugin.filter(items, match);

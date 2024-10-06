@@ -32,6 +32,7 @@ public class GunReader {
         this.plugin = JavaPlugin.getPlugin(CustomItems.class);
         this.host = host;
         this.meta = meta;
+        this.id = readId();
         loadStages();
     }
 
