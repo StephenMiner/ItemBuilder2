@@ -59,9 +59,14 @@ public class HandleMelee implements Listener {
         String ver = Bukkit.getServer().getBukkitVersion();
         ver = ver.substring(0, ver.indexOf("-"));
         try {
-            if (ver.equals("1.21"))
-                return (ReachAttackHandler) Class.forName(packageName + ".v1_21_R1.ReachAttackHandlerImpl").getConstructor(Player.class).newInstance(player);
-
+            switch (ver){
+                case "1.21" ->{
+                    return (ReachAttackHandler) Class.forName(packageName + ".v1_21_R1.ReachAttackHandlerImpl").getConstructor(Player.class).newInstance(player);
+                }
+                case "1.21.3" -> {
+                    return (ReachAttackHandler) Class.forName(packageName + ".v1_21_R3.ReachAttackHandlerImpl").getConstructor(Player.class).newInstance(player);
+                }
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
