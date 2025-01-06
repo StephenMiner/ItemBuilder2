@@ -4,6 +4,8 @@ import me.stephenminer.customitems.CustomItems;
 import me.stephenminer.customitems.ItemConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlot;
@@ -28,7 +30,10 @@ public class BuildAttribute{
         return config.getConfig().getConfigurationSection(section).getKeys(false);
     }
     public Set<String> acceptableStrings(){
-        return Arrays.stream(Attribute.values()).map(Attribute::name).collect(Collectors.toSet());
+        Set<String> names = new HashSet<>();
+        Attribute[] attributes = Attribute.values();
+        for (Attribute attri : attributes) names.add(attri.name());
+        return names;
     }
 
     public Map<Attribute, Double> getAttributes(){
@@ -39,11 +44,21 @@ public class BuildAttribute{
         for (String key : section){
             if (key == null || key.isEmpty())
                 continue;
-            Attribute a = acceptableStrings().contains(key) ? Attribute.valueOf(key) : null;
-            if (a != null){
-                double i = config.getConfig().getDouble("attributes." + key + ".amount");
-                map.put(a,i);
+            Attribute a;
+            try{
+                a = acceptableStrings().contains(key) ? Attribute.valueOf(key) : null;
+            }catch (Exception e){
+                a = Registry.ATTRIBUTE.get(NamespacedKey.minecraft(key));
             }
+            if (a == null) {
+                try {
+                    a = Registry.ATTRIBUTE.get(NamespacedKey.minecraft(key));
+                }catch (Exception ignored){}
+            }
+            if (a != null) {
+                double i = config.getConfig().getDouble("attributes." + key + ".amount");
+                map.put(a, i);
+            }else System.out.println("FAILED TO READ ATTRIBUTE " + key + "! Maybe it isn't correct?");
         }
         return map;
     }
