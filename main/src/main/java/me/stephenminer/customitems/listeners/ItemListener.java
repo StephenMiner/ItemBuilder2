@@ -4,7 +4,6 @@ import me.stephenminer.customitems.CustomItems;
 import me.stephenminer.customitems.builder.ItemReader;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -25,10 +24,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ItemListener implements Listener {
     private final CustomItems plugin;
+    private boolean componentVersion;
 
 
     public ItemListener(){
         this.plugin = JavaPlugin.getPlugin(CustomItems.class);
+        String ver = Bukkit.getServer().getBukkitVersion();
+        ver = ver.substring(0, ver.indexOf("-"));
+        componentVersion = ver.equals("1.20.5") || ver.equals("1.20.6") || ver.contains("1.21");
     }
 
     @EventHandler (priority = EventPriority.HIGHEST)

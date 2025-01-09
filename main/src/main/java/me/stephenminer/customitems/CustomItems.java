@@ -6,6 +6,7 @@ import me.stephenminer.customitems.builder.RecipeBuilder;
 import me.stephenminer.customitems.commands.*;
 import me.stephenminer.customitems.gunutils.GunRecord;
 import me.stephenminer.customitems.listeners.*;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -30,6 +31,7 @@ import java.util.List;
  */
 
 public final class CustomItems extends JavaPlugin {
+    public static boolean foodComps;
     //Just the id for the item
     public NamespacedKey id;
     //Defines the melee range for the item
@@ -111,11 +113,24 @@ public final class CustomItems extends JavaPlugin {
         Recipes = new ConfigFile(this, "recipes");
         Items = new ConfigFile(this, "items");
         bulletHit = new FixedMetadataValue(this, true);
+
+        String ver = Bukkit.getServer().getBukkitVersion();
+        ver = ver.substring(0, ver.indexOf("-"));
+        String[] comps = ver.split("\\.");
+        int major = Integer.parseInt(comps[1]);
+        if (major == 20){
+            foodComps = comps.length > 2 && Integer.parseInt(comps[2]) > 5;
+        }else if (major > 20) CustomItems.foodComps = true;
+        this.version = versionComponents();
+
+
+
         createAttributeKeys();
         registerCommands();
         addRecipes();
         registerEvents();
         createGunRecords();
+
     }
 
     private void createGunRecords(){
@@ -249,5 +264,19 @@ public final class CustomItems extends JavaPlugin {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         String savedId = container.getOrDefault(this.id, PersistentDataType.STRING, "");
         return savedId.equalsIgnoreCase(id);
+    }
+
+    public int[] version;
+
+    public int[] versionComponents(){
+        String ver = Bukkit.getServer().getBukkitVersion();
+        ver = ver.substring(0, ver.indexOf("-"));
+        String[] comps = ver.split("\\.");
+        int size = comps.length;
+        int[] vercomps = new int[size];
+        for (int i = 0; i < size; i++ ){
+            vercomps[i] = Integer.parseInt(comps[i]);
+        }
+        return vercomps;
     }
 }

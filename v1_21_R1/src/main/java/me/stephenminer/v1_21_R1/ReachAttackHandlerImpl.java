@@ -25,7 +25,6 @@ public class ReachAttackHandlerImpl implements ReachAttackHandler {
             living.removeMetadata(ReachAttackHandler.DATA_KEY(attacker.getUniqueId()),plugin);
             return;
         }
-
         ServerPlayer craftPlayer = ((CraftPlayer) attacker).getHandle();
         // living.setMetadata(ReachAttackHandler.DATA_KEY(attacker.getUniqueId()),new FixedMetadataValue(plugin,(byte) (0)));
         craftPlayer.attack(((CraftLivingEntity) living).getHandle());
