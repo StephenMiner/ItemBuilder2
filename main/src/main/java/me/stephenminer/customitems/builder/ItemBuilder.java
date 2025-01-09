@@ -1,8 +1,8 @@
 package me.stephenminer.customitems.builder;
 
+
 import me.stephenminer.customitems.CustomItems;
 import me.stephenminer.customitems.ItemConfig;
-import me.stephenminer.customitems.listeners.HandleMelee;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,8 +11,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.trim.TrimPattern;
-import org.bukkit.packs.DataPack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,6 +36,8 @@ public class ItemBuilder {
     public boolean isGun(){
         return config.getConfig().contains("gun-type");
     }
+
+    public boolean hasFoodComp(){ return config.getConfig().contains("food"); }
 
     private List<String> getStringList(String section) {
         if (!config.getConfig().contains(section))
@@ -181,6 +181,34 @@ public class ItemBuilder {
     }
 
 
+    private ItemStack constructFoodComps(ItemStack item, ItemMeta meta){
+        if (!hasFoodComp() || !CustomItems.foodComps) return null;
+        String[] foodComps = new String[5];
+        foodComps[0] = config.getConfig().getString("food.stats");
+        List<String> effects = config.getConfig().getStringList("food.effects");
+        StringBuilder flattenEffects = new StringBuilder();
+        for (String effect : effects) flattenEffects.append(effect).append("/");
+        if (!flattenEffects.isEmpty()) flattenEffects.deleteCharAt(flattenEffects.length()-1);
+        foodComps[1] = flattenEffects.toString();
+        foodComps[2] = config.getConfig().getString("food.eat-seconds");
+        foodComps[3] = config.getConfig().getString("food.always-eat");
+        boolean nms21 = plugin.version[1] == 21 && plugin.version[2] >= 3;
+        String packageName = "me.stephenminer";
+        try{
+            FoodBuilder builder;
+            if ((plugin.version[1] == 20 && plugin.version[2] >= 5) || !nms21)
+                builder = (FoodBuilder) Class.forName(packageName + ".v1_21_R1.FoodParser").getConstructor(ItemStack.class, ItemMeta.class,String[].class).newInstance(item, meta, foodComps);
+            else{
+                builder = (FoodBuilder) Class.forName(packageName + ".v1_21_R3.FoodParser").getConstructor(ItemStack.class, String[].class).newInstance(item, foodComps);
+            }
+            return builder.build();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+
 
     private ItemMeta addCustomTags(ItemMeta meta){
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -227,6 +255,7 @@ public class ItemBuilder {
         boolean enchantable = canEnchant();
         if (!enchantable)
             container.set(plugin.enchantable,PersistentDataType.BOOLEAN,false);
+
         return meta;
     }
 
@@ -259,10 +288,12 @@ public class ItemBuilder {
         TrimBuilder builder = new TrimBuilder(meta,config);
         if (builder.validMeta())
             builder.applyTrim();
+
         item.setItemMeta(meta);
         BuildAttribute ba = new BuildAttribute(plugin, config);
         ItemStack newItem = ba.addAttributes(item);
-        return newItem;
+        ItemStack withComps = constructFoodComps(newItem,newItem.getItemMeta());
+        return withComps==null ? newItem : withComps;
     }
 
     public ItemConfig getConfig(){ return config; }
