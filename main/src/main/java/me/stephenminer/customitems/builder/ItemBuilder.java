@@ -180,6 +180,8 @@ public class ItemBuilder {
         return config.getConfig().getBoolean("enchantable");
     }
 
+    private int maxStackSize(){ return config.getConfig().getInt("stack-size"); }
+
 
     private ItemStack constructFoodComps(ItemStack item, ItemMeta meta){
         if (!hasFoodComp() || !CustomItems.foodComps) return null;
@@ -247,17 +249,30 @@ public class ItemBuilder {
         boolean placeable = placeable();
         if (!placeable) container.set(plugin.placeable,PersistentDataType.BOOLEAN,false);
 
-        short maxUses = maxUses();
-        if (maxUses > 0) {
-            container.set(plugin.maxUses,PersistentDataType.SHORT,maxUses);
-            container.set(plugin.durability,PersistentDataType.SHORT,maxUses);
-        }
+
         boolean enchantable = canEnchant();
         if (!enchantable)
             container.set(plugin.enchantable,PersistentDataType.BOOLEAN,false);
-
+        meta = addComponentTags(meta);
         return meta;
     }
+
+    private ItemMeta addComponentTags(ItemMeta meta){
+        short maxUses = maxUses();
+        if (maxUses > 0) {
+            if (plugin.durHandler == null){
+                PersistentDataContainer container = meta.getPersistentDataContainer();
+                container.set(plugin.maxUses,PersistentDataType.SHORT,maxUses);
+                container.set(plugin.durability,PersistentDataType.SHORT,maxUses);
+            }else meta = plugin.durHandler.addDurability(meta,maxUses);
+        }
+        int stackSize = maxStackSize();
+        if (stackSize > 0 && plugin.stackHandler != null){
+            meta = plugin.stackHandler.addStackSize(meta, stackSize);
+        }
+        return meta;
+    }
+
 
     public ItemStack buildItem() {
         Material mat = getMaterial();

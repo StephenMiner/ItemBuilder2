@@ -1,10 +1,7 @@
 package me.stephenminer.customitems;
 
-import me.stephenminer.customitems.builder.GunBuilder;
-import me.stephenminer.customitems.builder.ItemBuilder;
-import me.stephenminer.customitems.builder.RecipeBuilder;
+import me.stephenminer.customitems.builder.*;
 import me.stephenminer.customitems.commands.*;
-import me.stephenminer.customitems.gunutils.GunRecord;
 import me.stephenminer.customitems.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -105,6 +102,9 @@ public final class CustomItems extends JavaPlugin {
     public ConfigFile Recipes;
     public ConfigFile Items;
 
+    public StackingHandler stackHandler;
+    public DurabilityHandler durHandler;
+
 
     public FixedMetadataValue bulletHit;
 
@@ -122,8 +122,14 @@ public final class CustomItems extends JavaPlugin {
             foodComps = comps.length > 2 && Integer.parseInt(comps[2]) > 5;
         }else if (major > 20) CustomItems.foodComps = true;
         this.version = versionComponents();
-
-
+        if (this.version[1] == 21 || this.version[1] == 20 && this.version[2] >= 6){
+            try {
+                durHandler = (DurabilityHandler) Class.forName("me.stephenminer.DurabilityTool").getConstructor().newInstance();
+                stackHandler = (StackingHandler) Class.forName("me.stephenminer.StackingTool").getConstructor().newInstance();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
 
         createAttributeKeys();
         registerCommands();
