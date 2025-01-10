@@ -89,15 +89,16 @@ public class ItemReader {
     public void tryBreakItem(Player player){
         short durability = durability();
         if (durability > 0) return;
-        host.setAmount(0);
         World world = player.getWorld();
         Location loc = player.getEyeLocation();
+        if (host == null || host.getType().isAir()) return;
         world.spawnParticle(Particle.ITEM_CRACK,loc,1, host);
         world.playSound(loc, Sound.ENTITY_ITEM_BREAK,1,1);
+        host.setAmount(0);
     }
 
     /**
-     * Unbreaking formula from https://minecraft.fandom.com/wiki/Durability
+     * Unbreaking formula from <a href="https://minecraft.fandom.com/wiki/Durability">here</a>
      * I also tried to verify it in the NMS classes, looked mostly right
      * @param level
      * @param armor
