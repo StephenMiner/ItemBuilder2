@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.FoodComponent;
 import org.bukkit.potion.PotionEffect;
@@ -66,6 +67,7 @@ public class FoodParser implements FoodBuilder {
         if (source[4] == null || source[4].isBlank()) return;
         Material mat = Registry.MATERIAL.get(NamespacedKey.minecraft(source[4].toLowerCase()));
         // Not in this api version
+
     }
 
     private void buildEffect(String effect){

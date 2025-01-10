@@ -17,7 +17,6 @@ import org.bukkit.craftbukkit.v1_21_R2.CraftSound;
 import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R2.potion.CraftPotionUtil;
 
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -50,14 +49,6 @@ public class FoodParser implements FoodBuilder {
             saturation = Float.parseFloat(unpack[1]);
         }
 
-        //The below isn't present in the api
-        /*
-        float eatSeconds;
-        if (source[2] == null || source[2].isBlank()) eatSeconds = 3;
-        else eatSeconds = Float.parseFloat(source[2]);
-        component.setEatSeconds(eatSeconds);
-
-         */
 
         boolean alwaysEat;
         if (source[3] == null || source[3].isBlank()) alwaysEat = false;
@@ -95,6 +86,7 @@ public class FoodParser implements FoodBuilder {
             int duration = Integer.parseInt(unpack[1]);
             int amplifier = Integer.parseInt(unpack[2]);
             float chance = Float.parseFloat(unpack[3]);
+            System.out.println(type);
             PotionEffect potEffect = new PotionEffect(type, duration,amplifier);
             builder.onConsume(new ApplyStatusEffectsConsumeEffect(CraftPotionUtil.fromBukkit(potEffect), chance));
             //component.addEffect(new PotionEffect(type, duration, amplifier), chance);
