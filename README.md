@@ -1,4 +1,4 @@
-Supported Versions: 1.20.2,1.20.4
+Supported Versions: 1.20.2,1.20.4,1.21,1.21.3
 
 
 ***NOTE***
@@ -41,26 +41,37 @@ player-bonus: 0.25
 mob-bonus: 9
 ##Defines how much armor damage absorption should be reduced by as a %, a value from 0.0-1.0 with 0.0 representing full armor piercing.
 ap: 0.5
+food:
+  ##The nutrition and saturation values for the item when eaten
+  stats: 4,0.5
+  ##The effects to apply when eaten. Format as "Effect,duration,amplifier,chance(0-1)"
+  effects:
+    - regeneration,60,2,1
+  ##How many seconds it takes to eat the item
+  eat-seconds: 3
+  ##Define whether one can always eat the item regardless of food level.
+  always-eat: true
+  
 attributes:
-  GENERIC_MAX_HEALTH:
+  max_health:
     amount: 234.0
     slot: HAND
-  GENERIC_ATTACK_DAMAGE:
+  attack_damage:
     amount: 10.0
     slot: HAND
-  GENERIC_ATTACK_SPEED:
+  attack_speed:
     amount: -3
     slot: HAND
-  GENERIC_ARMOR:
+  armor:
     amount: 23.0
     slot: CHEST
-  GENERIC_ARMOR_TOUGHNESS:
+  armor_toughness:
     amount: 23.0
     slot: CHEST
-  GENERIC_ATTACK_KNOCKBACK:
+  attack_knockback:
     amount: 23.0
     slot: CHEST
-  GENERIC_KNOCKBACK_RESISTANCE:
+  knockback_resistance:
     amount: 23.0
     slot: CHEST
 enchantments:
